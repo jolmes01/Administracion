@@ -1,0 +1,61 @@
+idcuenta,descripcion
+1101,Caja
+1102,Bancos
+1103,"Inversiones Temporales"
+1104,Clientes
+1105,"Documentos por cobrar"
+1106,"Deudores diversos"
+1107,Almacén
+1108,"IVA acreditable"
+1109,"IVA por acreditar"
+1110,"Rentas pagadas por anticipado"
+1111,"Primas de seguro"
+1112,"Intereses pagados por anticipado"
+1113,"Papelería y útiles"
+1114,"Propaganda y publicidad"
+1201,Terrenos
+1202,Edificio
+1203,"Mobiliario y equipo de oficina"
+1204,"Equipo de reparto"
+1205,"Equipo de Cómputo"
+1301,"Crédito mercantil"
+1302,Patentes
+1303,Marcas
+1401,"Depósitos en garantía"
+1402,"Gastos de organización"
+1403,"Gastos de instalación"
+2101,Proveedores
+2102,"Acreedores diversos"
+2103,"Documentos por pagar"
+2104,"IVA trasladado"
+2105,"IVA por trasladar"
+2106,"Impuestos por pagar"
+2107,"Intereses cobrados por anticipado"
+2108,"Rentas cobradas por anticipado"
+2109,"PTU por pagar"
+2201,"Docuemtnos por pagar a largo plazo"
+2202,"Acreedores hipotecarios"
+2203,"Crédito refaccionario"
+2204,"Intereses cobrados por anticipado"
+3101,"Capital Social"
+3102,"Aportaciones para futuros aumentos de capital"
+3103,Donaciones
+3104,"Prima en venta de acciones"
+3201,"Utilidades de ejercicios anteriores"
+3202,"Pérdidas de ejercicios anteriores"
+3203,"Reserva legal"
+3204,"Utilidad del ejercicio"
+3205,"Pérdida del ejercicio"
+4101,"Depreciación acumulada de edificio"
+4102,"Depreciación acumulada de mobiliario y equipo"
+4103,"Depreciación acumulada de equipo de transporte"
+4104,"Depreciación acumulada de equipo de cómputo"
+5100,"Costo de ventas"
+5101,"Gastos de venta"
+5102,"Gastos de Administración"
+5103,"Gastos por intereses"
+5104,"Otros gastos"
+6100,Ventas
+6102,"Otros ingresos"
+6103,"Otros gastos"
+6104,"Intereses cobrados"

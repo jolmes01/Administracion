@@ -1,0 +1,4 @@
+CREATE VIEW `cuentas` AS 
+SELECT idCuentaC, cuenta.descripcion, idSubCuenta, descripcionSub, saldo 
+FROM administracion.cuenta, administracion.cuenta_empresa
+WHERE cuenta_empresa.idEmpresaC = 1 AND cuenta_empresa.idCuentaC = cuenta.idcuenta;

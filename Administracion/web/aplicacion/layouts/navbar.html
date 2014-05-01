@@ -1,0 +1,55 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<script type="text/javascript">
+    $(document).ready(function() {
+        controlMenu();
+    });
+    //Controla el activado del menú
+    //Si se agregan links al menú copiar y pegar if y ajustarlo al id y su recurso
+    function controlMenu() {
+        var urlInParts = window.location.pathname.split('/');
+        var valor = urlInParts[urlInParts.length - 1];
+        if (valor == "principal.jsp") {
+            var link = document.getElementById("logo");
+            link.setAttribute('href', "#");
+            $('#logo').addClass('current-page-item');
+        }
+        if (valor == "catalogo.jsp") {
+            var link = document.getElementById("catalog");
+            link.setAttribute('href', "#");
+            $('#catalog').addClass('current-page-item');
+        }
+        if (valor == "poliza.jsp") {
+            var link = document.getElementById("poliz");
+            link.setAttribute('href', "#");
+            $('#poliz').addClass('current-page-item');
+        }
+        if (valor == "saldo.jsp") {
+            var link = document.getElementById("saldo");
+            link.setAttribute('href', "#");
+            $('#saldo').addClass('current-page-item');
+        }
+        if (valor == "estado.jsp") {
+            var link = document.getElementById("state");
+            link.setAttribute('href', "#");
+            $('#state').addClass('current-page-item');
+        }
+    }
+
+</script>
+<div id="header-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="12u">
+                <header id="header">
+                    <h1><a href="principal.jsp" id="logo">SisCon - Usuario</a></h1>
+                    <nav id="nav">
+                        <a href="catalogo.jsp" id="catalog">Catálogo de cuentas</a>
+                        <a href="poliza.jsp" id="poliz">Captura de polizas</a>
+                        <a href="saldo.jsp" id="saldo">Saldos</a>
+                        <a href="estado.jsp" id="state">Generar Estados</a>
+                    </nav>
+                </header>
+            </div>
+        </div>
+    </div>
+</div>
