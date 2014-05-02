@@ -20,9 +20,8 @@
                         </thead>
                         <tbody>
                             <%  
-                            while (it.hasNext()) {
-                            Cuenta c = (Cuenta) it.next().getValue();
-                            if(c.getIdCuenta() < 1200 && c.getIdCuenta() >= 1100){
+                            for(Cuenta c : cuentasList) {
+                                if(c.getIdCuenta() < 1200 && c.getIdCuenta() >= 1100){
                             %>
                             <tr>
                                 <th><p><%= c.getIdCuenta() %></p></th>
@@ -75,9 +74,8 @@
                         </thead>
                         <tbody>
                             <%  
-                            while (it.hasNext()) {
-                            Cuenta c = (Cuenta) it.next().getValue();
-                            if(c.getIdCuenta() < 1300 && c.getIdCuenta() >= 1200){
+                            for(Cuenta c : cuentasList) {
+                                if(c.getIdCuenta() < 1300 && c.getIdCuenta() >= 1200){
                             %>
                             <tr>
                                 <th><p><%= c.getIdCuenta() %></p></th>
@@ -130,9 +128,8 @@
                         </thead>
                         <tbody>
                             <%  
-                            while (it.hasNext()) {
-                            Cuenta c = (Cuenta) it.next().getValue();
-                            if(c.getIdCuenta() < 1400 && c.getIdCuenta() >= 1300){
+                            for(Cuenta c : cuentasList) {
+                                if(c.getIdCuenta() < 1400 && c.getIdCuenta() >= 1300){
                             %>
                             <tr>
                                 <th><p><%= c.getIdCuenta() %></p></th>
@@ -185,9 +182,8 @@
                         </thead>
                         <tbody>
                             <%  
-                            while (it.hasNext()) {
-                            Cuenta c = (Cuenta) it.next().getValue();
-                            if(c.getIdCuenta() < 1404 && c.getIdCuenta() >= 1400){
+                            for(Cuenta c : cuentasList) {
+                                if(c.getIdCuenta() < 1404 && c.getIdCuenta() >= 1400){
                             %>
                             <tr>
                                 <th><p><%= c.getIdCuenta() %></p></th>

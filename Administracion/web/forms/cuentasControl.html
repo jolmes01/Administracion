@@ -1,0 +1,149 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    Alta de cuentas
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body">
+                <form action="cuentas" method="post" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="cuentaN" class="col-md-2 control-label">Cuenta</label>
+                        <div class="col-md-6">
+                            <select id="cuentaN" name="cuentaN" class="form-control">
+                                <%
+                                Connection con = new AccesBD().conexion();
+                                PreparedStatement ps = con.prepareStatement("SELECT idcuenta,descripcion FROM cuenta ORDER BY descripcion");
+                                ps.execute();
+                                ResultSet rs = ps.getResultSet();
+                                while (rs.next()) {
+                                if (!map.containsKey(rs.getInt("idcuenta"))) {
+                                %>
+                                <option value="<%= rs.getString("idcuenta")%>"><%= rs.getString("descripcion")%></option>
+                                <% }
+                                }
+                                con.close(); %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="saldo" class="col-md-2 control-label">Saldo inicial</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="saldoText" name="saldoText" placeholder="Tu saldo" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-6">
+                            <button type="submit" name="submit" class="btn btn-success" value="cuentaG">Enviar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                    Alta de subcuenta
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+                <form action="cuentas" method="post" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="cuentaSubN" class="col-md-2 control-label">Cuenta</label>
+                        <div class="col-md-6">
+                            <select id="cuentaSubN" name="cuentaSubN" class="form-control">
+                                <%
+                                con = new AccesBD().conexion();
+                                ps = con.prepareStatement("SELECT idCuentaC,descripcion FROM cuentas WHERE idEmpresaC LIKE 1 AND idSubCuenta IS null ORDER BY idCuentaC");
+                                ps.execute();
+                                rs = ps.getResultSet();
+                                while (rs.next()) {
+                                %>
+                                <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
+                                <% }
+                                con.close();%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="idSub" class="col-md-2 control-label">ID SubCuenta</label>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <input id="automatic" name="automatic" type="checkbox" onclick="consecutivo()" value="calcular" checked/>Calcular Automático
+                                </span>
+                                <input id="idSub" name="idSub" type="text" class="form-control" placeholder="ID Consecutivo 1,2,3,..." disabled>
+                            </div><!-- /input-group -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionSub" class="col-md-2 control-label">Descripción</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="descripcionSub" name="descripcionSub" placeholder="Descripción de la subcuenta" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="saldoSub" class="col-md-2 control-label">Saldo inicial</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="saldoSub" name="saldoSub" placeholder="Tu saldo inicial de subcuenta" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-6">
+                            <button type="submit" name="submit" class="btn btn-success" value="cuentaE">Enviar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                    Baja de cuentas
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+            <div class="panel-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="bajaCuenta" class="col-md-2 control-label">Cuenta</label>
+                        <div class="col-md-6">
+                            <select id="bajaCuenta" class="form-control">
+                                <%
+                                con = new AccesBD().conexion();
+                                ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC");
+                                ps.execute();
+                                rs = ps.getResultSet();
+                                while (rs.next()) {
+                                if (rs.getString("idSubCuenta") == null || rs.getString("idSubCuenta") == "null") {
+                                %>
+                                <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
+                                <% } else {%>
+                                <option value="<%= rs.getString("idcuentaC")%>.<%= rs.getString("idSubCuenta")%>"><%= rs.getString("idcuentaC") + "." + rs.getString("idSubCuenta") + " - " + rs.getString("descripcionSub")%></option>
+                                <% }
+                                }
+                                con.close();%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-6">
+                            <button type="submit" name="submit" class="btn btn-danger" value="cuentaD">Eliminar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

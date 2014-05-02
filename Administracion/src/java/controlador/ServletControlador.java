@@ -7,6 +7,7 @@ package controlador;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -36,16 +37,29 @@ public class ServletControlador extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
+        String submit = request.getParameter("submit");
+
         //Obtiene la sesion para conocer los atributos que contiene
         HttpSession session = request.getSession(true);
         //Se obtiene si es que existe el bean de las cuentas
         BeanCuentas cuentas = (BeanCuentas) session.getAttribute("cuentasE");
         //Si el bean no existe en la sesion se crea uno y se agrega a la misma
         if (cuentas == null) {
+            System.out.println("CREADO BEAN CUENTAS");
             cuentas = new BeanCuentas();
             session.setAttribute("cuentasE", cuentas);
         }
-        getCuentas(request, response, out, cuentas);
+
+        if (submit != null) {
+            if ("cuentaG".equals(submit)) {
+                registraCuentaG(request, response, out, cuentas);
+            }
+            if ("cuentaE".equals(submit)){
+                registraCuentaE(request, response, out, cuentas);
+            }
+        } else {
+            getCuentas(request, response, out, cuentas);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -96,4 +110,46 @@ public class ServletControlador extends HttpServlet {
         }
     }
 
+    private void registraCuentaG(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
+        double saldoD = 0.0;
+        int idCuenta = Integer.parseInt(request.getParameter("cuentaN"));
+        String saldo = request.getParameter("saldoText");
+        if (saldo != null && !"".equals(saldo)) {
+            saldoD = Double.valueOf(saldo);
+        }
+        boolean result = cuentas.addCuenta(idCuenta, saldoD);
+        try {
+            HttpSession ses = request.getSession(true);
+            ses.setAttribute("Respuesta", result);
+            response.sendRedirect("./catalogo.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(ServletControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void registraCuentaE(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
+        double saldoD = 0.0;
+        int idSubD;
+        int idCuenta = Integer.parseInt(request.getParameter("cuentaSubN"));
+        String automatico = request.getParameter("automatic");
+        String idSub = request.getParameter("idSub");
+        String descripcion = request.getParameter("descripcionSub");
+        String saldo = request.getParameter("saldoSub");
+        if("calcular".equals(automatico)){
+            idSubD = cuentas.getTotalSubCuentas(idCuenta)+1;
+        }else{
+            idSubD = Integer.parseInt(idSub);
+        }
+        if (saldo != null && !"".equals(saldo)) {
+            saldoD = Double.valueOf(saldo);
+        }
+        boolean result = cuentas.addCuenta(idCuenta, idSubD, descripcion, saldoD);
+        try {
+            HttpSession ses = request.getSession(true);
+            ses.setAttribute("Respuesta", result);
+            response.sendRedirect("./catalogo.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(ServletControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
