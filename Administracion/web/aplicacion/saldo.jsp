@@ -17,10 +17,7 @@
         <script src="../dist/js/config.js"></script>
         <script src="../dist/js/skel.min.js"></script>
         <script src="../dist/js/skel-panels.min.js"></script>
-<<<<<<< HEAD
-=======
         <script src="../dist/js/bootstrap.min.js"></script>
->>>>>>> 3226d371b027f195f09e6f3073779baee6010e2a
         <noscript>
         <link rel="stylesheet" href="../dist/css/skel-noscript.css" />
         <link rel="stylesheet" href="../dist/css/style.css" />
