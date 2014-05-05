@@ -123,10 +123,10 @@ public class BeanCuentas {
             boolean result = ps.execute();
             con.close();
             if (!result) {
-                updateDinero(idCuenta,saldo);
+                updateDinero(idCuenta, saldo);
                 Cuenta c = cuenta.get(idCuenta);
                 c.setSubCuenta(idSubD, descripcion, saldo);
-                c.setSaldoTotal(saldo+c.getSaldoTotal());
+                c.setSaldoTotal(saldo + c.getSaldoTotal());
                 cuenta.remove(idCuenta);
                 cuenta.put(idCuenta, c);
                 resultado = true;
@@ -138,11 +138,55 @@ public class BeanCuentas {
         return resultado;
     }
 
+    public boolean dropCuenta(int idCuenta, int idSubCuenta) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
+                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta);
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                Cuenta c = cuenta.get(idCuenta);
+                SubCuenta sub = c.getSubCuenta(idSubCuenta);
+                c.removeSubCuenta(sub);
+                cuenta.remove(idCuenta);
+                cuenta.put(idCuenta, c);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }
+
+    /*public boolean dropCuenta(int parseInt) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
+                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta IS");
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                Cuenta c = cuenta.get(idCuenta);
+                SubCuenta sub = c.getSubCuenta(idSubCuenta);
+                c.removeSubCuenta(sub);
+                cuenta.remove(idCuenta);
+                cuenta.put(idCuenta, c);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }*/
+
     private void updateDinero(int idCuenta, double saldo) {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("UPDATE cuenta_empresa "
-                    + "SET saldo = (saldo+"+saldo+") WHERE idCuentaC = "+idCuenta+" AND idSubCuenta IS NULL;");
+                    + "SET saldo = (saldo+" + saldo + ") WHERE idCuentaC = " + idCuenta + " AND idSubCuenta IS NULL;");
             ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);

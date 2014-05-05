@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div class="panel-group" id="accordion">
-    <div class="panel panel-default">
+    <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
+    <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -105,7 +105,7 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-default">
+    <div class="panel panel-danger">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
@@ -119,10 +119,10 @@
                     <div class="form-group">
                         <label for="bajaCuenta" class="col-md-2 control-label">Cuenta</label>
                         <div class="col-md-6">
-                            <select id="bajaCuenta" class="form-control">
+                            <select id="bajaCuenta" name="bajaCuenta" class="form-control">
                                 <%
                                 con = new AccesBD().conexion();
-                                ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC");
+                                ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC,idSubCuenta");
                                 ps.execute();
                                 rs = ps.getResultSet();
                                 while (rs.next()) {

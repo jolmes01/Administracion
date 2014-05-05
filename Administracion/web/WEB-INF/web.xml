@@ -4,9 +4,17 @@
         <servlet-name>ServletControlador</servlet-name>
         <servlet-class>controlador.ServletControlador</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletPoliza</servlet-name>
+        <servlet-class>controlador.ServletPoliza</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletControlador</servlet-name>
         <url-pattern>/aplicacion/cuentas</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletPoliza</servlet-name>
+        <url-pattern>/poliza</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

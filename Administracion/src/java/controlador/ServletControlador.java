@@ -57,6 +57,9 @@ public class ServletControlador extends HttpServlet {
             if ("cuentaE".equals(submit)){
                 registraCuentaE(request, response, out, cuentas);
             }
+            if("cuentaD".equals(submit)){
+                //bajaCuenta(request, response, out, cuentas);
+            }
         } else {
             getCuentas(request, response, out, cuentas);
         }
@@ -152,4 +155,17 @@ public class ServletControlador extends HttpServlet {
             Logger.getLogger(ServletControlador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /*private void bajaCuenta(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
+        String cuenta = request.getParameter("bajaCuenta");
+        boolean result = false;
+        if(cuenta.length() > 4){
+            String cuentasList[] = cuenta.split(".");
+            int idCuenta = Integer.parseInt(cuentasList[0]);
+            int idSubCuenta = Integer.parseInt(cuentasList[1]);
+            result = cuentas.dropCuenta(idCuenta,idSubCuenta);
+        }else{
+            result = cuentas.dropCuenta(Integer.parseInt(cuenta));
+        }
+    }*/
 }
