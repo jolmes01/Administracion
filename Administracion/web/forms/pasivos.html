@@ -18,8 +18,9 @@
             </thead>
             <tbody>
                 <%  
-                for(Cuenta c : cuentasList) {
-                    if(c.getIdCuenta() < 2200 && c.getIdCuenta() >= 2100){
+                while (it.hasNext()) {
+                Cuenta c = (Cuenta) it.next().getValue();
+                if(c.getIdCuenta() < 2200 && c.getIdCuenta() >= 2100){
                 %>
                 <tr>
                     <th><p><%= c.getIdCuenta() %></p></th>
@@ -72,8 +73,9 @@
             </thead>
             <tbody>
                 <%  
-                for(Cuenta c : cuentasList) {
-                    if(c.getIdCuenta() < 2205 && c.getIdCuenta() >= 2200){
+                while (it.hasNext()) {
+                Cuenta c = (Cuenta) it.next().getValue();
+                if(c.getIdCuenta() < 2205 && c.getIdCuenta() >= 2200){
                 %>
                 <tr>
                     <th><p><%= c.getIdCuenta() %></p></th>

@@ -12,8 +12,9 @@
     </thead>
     <tbody>
         <%  
-        for(Cuenta c : cuentasList) {
-            if(c.getIdCuenta() < 6105 && c.getIdCuenta() >= 6100){
+        while (it.hasNext()) {
+        Cuenta c = (Cuenta) it.next().getValue();
+        if(c.getIdCuenta() < 6105 && c.getIdCuenta() >= 6100){
         %>
         <tr>
             <th><p><%= c.getIdCuenta() %></p></th>
