@@ -82,5 +82,115 @@ public class BeanCuentas {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+<<<<<<< HEAD
+
+    public boolean addCuenta(int idCuenta, double saldo) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
+                    + "VALUES(1," + idCuenta + ",null,null," + saldo + ")");
+            boolean result = ps.execute();
+            if (!result) {
+                ps.execute("SELECT descripcion FROM cuenta WHERE idcuenta = " + idCuenta);
+                ResultSet rs = ps.getResultSet();
+                if (rs.next()) {
+                    Cuenta c = new Cuenta();
+                    c.setDescripcionCuenta(rs.getString("descripcion"));
+                    c.setIdCuenta(idCuenta);
+                    c.setSaldoTotal(saldo);
+                    cuenta.put(idCuenta, c);
+                    resultado = true;
+                }
+                con.close();
+            }
+        } catch (SQLException ex) {
+            resultado = false;
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }
+
+    public boolean addCuenta(int idCuenta, int idSubD, String descripcion, double saldo) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
+                    + "VALUES(1," + idCuenta + "," + idSubD + ",'" + descripcion + "'," + saldo + ")");
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                updateDinero(idCuenta, saldo);
+                Cuenta c = cuenta.get(idCuenta);
+                c.setSubCuenta(idSubD, descripcion, saldo);
+                c.setSaldoTotal(saldo + c.getSaldoTotal());
+                cuenta.remove(idCuenta);
+                cuenta.put(idCuenta, c);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            resultado = false;
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }
+
+    public boolean dropCuenta(int idCuenta, int idSubCuenta) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
+                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta);
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                Cuenta c = cuenta.get(idCuenta);
+                SubCuenta sub = c.getSubCuenta(idSubCuenta);
+                c.removeSubCuenta(sub);
+                cuenta.remove(idCuenta);
+                cuenta.put(idCuenta, c);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }
+
+    /*public boolean dropCuenta(int parseInt) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
+                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta IS");
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                Cuenta c = cuenta.get(idCuenta);
+                SubCuenta sub = c.getSubCuenta(idSubCuenta);
+                c.removeSubCuenta(sub);
+                cuenta.remove(idCuenta);
+                cuenta.put(idCuenta, c);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }*/
+
+    private void updateDinero(int idCuenta, double saldo) {
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("UPDATE cuenta_empresa "
+                    + "SET saldo = (saldo+" + saldo + ") WHERE idCuentaC = " + idCuenta + " AND idSubCuenta IS NULL;");
+            ps.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+=======
     
+>>>>>>> parent of f01a746... Catalogo al 90
 }
