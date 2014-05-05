@@ -56,7 +56,7 @@
                         <section>
                             <h2>Cátalogo de cuentas de: </h2>
                             <div class="panel-group" id="accordion">
-                                <div class="panel panel-default">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -101,7 +101,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
+                                <div class="panel panel-primary">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -161,7 +161,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
+                                <div class="panel panel-danger">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
