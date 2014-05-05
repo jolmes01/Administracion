@@ -54,10 +54,10 @@ public class ServletControlador extends HttpServlet {
             if ("cuentaG".equals(submit)) {
                 registraCuentaG(request, response, out, cuentas);
             }
-            if ("cuentaE".equals(submit)){
+            if ("cuentaE".equals(submit)) {
                 registraCuentaE(request, response, out, cuentas);
             }
-            if("cuentaD".equals(submit)){
+            if ("cuentaD".equals(submit)) {
                 //bajaCuenta(request, response, out, cuentas);
             }
         } else {
@@ -138,9 +138,9 @@ public class ServletControlador extends HttpServlet {
         String idSub = request.getParameter("idSub");
         String descripcion = request.getParameter("descripcionSub");
         String saldo = request.getParameter("saldoSub");
-        if("calcular".equals(automatico)){
-            idSubD = cuentas.getTotalSubCuentas(idCuenta)+1;
-        }else{
+        if ("calcular".equals(automatico)) {
+            idSubD = cuentas.getTotalSubCuentas(idCuenta) + 1;
+        } else {
             idSubD = Integer.parseInt(idSub);
         }
         if (saldo != null && !"".equals(saldo)) {
@@ -157,15 +157,15 @@ public class ServletControlador extends HttpServlet {
     }
 
     /*private void bajaCuenta(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
-        String cuenta = request.getParameter("bajaCuenta");
-        boolean result = false;
-        if(cuenta.length() > 4){
-            String cuentasList[] = cuenta.split(".");
-            int idCuenta = Integer.parseInt(cuentasList[0]);
-            int idSubCuenta = Integer.parseInt(cuentasList[1]);
-            result = cuentas.dropCuenta(idCuenta,idSubCuenta);
-        }else{
-            result = cuentas.dropCuenta(Integer.parseInt(cuenta));
-        }
-    }*/
+     String cuenta = request.getParameter("bajaCuenta");
+     boolean result = false;
+     if(cuenta.length() > 4){
+     String cuentasList[] = cuenta.split(".");
+     int idCuenta = Integer.parseInt(cuentasList[0]);
+     int idSubCuenta = Integer.parseInt(cuentasList[1]);
+     result = cuentas.dropCuenta(idCuenta,idSubCuenta);
+     }else{
+     result = cuentas.dropCuenta(Integer.parseInt(cuenta));
+     }
+     }*/
 }

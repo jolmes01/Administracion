@@ -60,19 +60,19 @@ public class Cuenta {
         SubCuenta sub = new SubCuenta(idSubcuenta, descripcion, saldo);
         subcuentas.add(sub);
     }
-    
-    public SubCuenta getSubCuenta(int idSubCuenta){
+
+    public SubCuenta getSubCuenta(int idSubCuenta) {
         SubCuenta s = null;
-        for(SubCuenta sub : subcuentas){
-            if(sub.getIdSubCuenta() == idSubCuenta){
+        for (SubCuenta sub : subcuentas) {
+            if (sub.getIdSubCuenta() == idSubCuenta) {
                 s = sub;
                 break;
             }
         }
         return s;
     }
-    
-    public void removeSubCuenta(SubCuenta sub){
+
+    public void removeSubCuenta(SubCuenta sub) {
         subcuentas.remove(sub);
     }
 

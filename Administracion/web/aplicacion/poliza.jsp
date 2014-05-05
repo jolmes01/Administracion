@@ -61,26 +61,26 @@
                 var cuentaP = document.getElementById("cuentaP").value;
                 var fechaDeMov = document.getElementById("fechaDeMov").value;
                 var automatic = "cargo";
-                if($('#automatic').is(':checked')){
+                if ($('#automatic').is(':checked')) {
                     automatic = "cargo";
-                }else{
+                } else {
                     automatic = "abono";
                 }
                 var tipoCA = document.getElementById("tipoCA").value;
-                var params = "poliza="+poliza+"&cuentaP="+cuentaP+"&fechaDeMov="+fechaDeMov+"&tipo="+automatic+"&pago="+tipoCA;
+                var params = "poliza=" + poliza + "&cuentaP=" + cuentaP + "&fechaDeMov=" + fechaDeMov + "&tipo=" + automatic + "&pago=" + tipoCA;
 
-                var parametros = "comando=1" + "&"+ params;
+                var parametros = "comando=1" + "&" + params;
                 alert(parametros);
                 /*request.open("POST", "../controlador", true);
-
-                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.send(parametros);
-                request.onreadystatechange = function()
-                {
-
-                    var ex_ajsn = request.responseText;
-                    document.getElementById("carrito").innerHTML = ex_ajsn;
-                }*/
+                 
+                 request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                 request.send(parametros);
+                 request.onreadystatechange = function()
+                 {
+                 
+                 var ex_ajsn = request.responseText;
+                 document.getElementById("carrito").innerHTML = ex_ajsn;
+                 }*/
 
             }
         </script>
@@ -200,4 +200,3 @@
         <script src="../dist/js/bootstrap.min.js"></script>
     </body>
 </html>
-
