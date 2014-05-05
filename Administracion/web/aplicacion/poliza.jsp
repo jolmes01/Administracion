@@ -56,7 +56,7 @@
             function agregar()
             {
 
-                //var request = get_XmlHttp();
+                var request = get_XmlHttp();
                 var poliza = document.getElementById("poliza").value;
                 var cuentaP = document.getElementById("cuentaP").value;
                 var fechaDeMov = document.getElementById("fechaDeMov").value;
@@ -70,24 +70,53 @@
                 var params = "poliza=" + poliza + "&cuentaP=" + cuentaP + "&fechaDeMov=" + fechaDeMov + "&tipo=" + automatic + "&pago=" + tipoCA;
 
                 var parametros = "comando=1" + "&" + params;
-                alert(parametros);
-                /*request.open("POST", "../controlador", true);
-                 
-                 request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                 request.send(parametros);
-                 request.onreadystatechange = function()
-                 {
-                 
-                 var ex_ajsn = request.responseText;
-                 document.getElementById("carrito").innerHTML = ex_ajsn;
-                 }*/
+                request.open("POST", "../poliza", true);
 
+                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.send(parametros);
+                request.onreadystatechange = function()
+                {
+                    var ex_ajsn = request.responseText;
+                    document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                }
+
+            }
+
+            function cargar() {
+                var request = get_XmlHttp();
+
+                var parametros = "comando=0";
+                request.open("POST", "../poliza", true);
+
+                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.send(parametros);
+                request.onreadystatechange = function()
+                {
+                    var ex_ajsn = request.responseText;
+                    document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                }
+            }
+            function eliminar(vItem) {
+                var request = get_XmlHttp();
+                var pItem = "item=" + vItem;
+
+                var parametros = "comando=2" + "&" + pItem;
+                request.open("POST", "../poliza", true);
+
+                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.send(parametros);
+                request.onreadystatechange = function()
+                {
+
+                    var ex_ajsn = request.responseText;
+                    document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                }
             }
         </script>
         <!--[if lte IE 9]><link rel="stylesheet" href="css/ie9.css" /><![endif]-->
         <!--[if lte IE 8]><script src="js/html5shiv.js"></script><![endif]-->
     </head>
-    <body>
+    <body onload="cargar()">
         <%
             BeanCuentas cuenta = (BeanCuentas) session.getAttribute("cuentasE");
             Map<Integer, Cuenta> map = cuenta.getCuenta();
@@ -109,75 +138,6 @@
                             <h2>Captura de poliza</h2>
                             <%@include file="../forms/altapoliza.html" %>
                             <div id="tablaPolizas">
-                                <table class="table table-responsive">
-                                    <thead>
-                                        <tr>
-                                            <th><p>No. de Poliza</p></th>
-                                    <th><p>Cuenta</p></th>
-                                    <th><p>Descripción</p></th>
-                                    <th><p>Fecha del movimiento</p></th>
-                                    <th><p>Cargos</p></th>
-                                    <th><p>Abonos</p></th>
-                                    <th><p>Borrar</p></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th><p>1</p></th>
-                                    <th><p>1113</p></th>
-                                    <th><p>Papelería y útiles</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p>100</p></th>
-                                    <th><p></p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    <tr>
-                                        <th><p>1</p></th>
-                                    <th><p>1108</p></th>
-                                    <th><p>IVA acreditable</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p>10</p></th>
-                                    <th><p></p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    <tr>
-                                        <th><p>1</p></th>
-                                    <th><p>1102.01</p></th>
-                                    <th><p>Bancomer</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p></p></th>
-                                    <th><p>110</p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    <tr class="alert alert-danger">
-                                        <th><p>2</p></th>
-                                    <th><p>1113</p></th>
-                                    <th><p>Papelería y útiles</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p>100</p></th>
-                                    <th><p></p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    <tr class="alert alert-danger">
-                                        <th><p>2</p></th>
-                                    <th><p>1108</p></th>
-                                    <th><p>IVA acreditable</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p>10</p></th>
-                                    <th><p></p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    <tr class="alert alert-danger">
-                                        <th><p>2</p></th>
-                                    <th><p>1102.01</p></th>
-                                    <th><p>Bancomer</p></th>
-                                    <th><p>02-03-14</p></th>
-                                    <th><p></p></th>
-                                    <th><p>150</p></th>
-                                    <th><button class="btn btn-danger">Eliminar</button></th>
-                                    </tr>
-                                    </tbody>
-                                </table>
                             </div>
                         </section>
                     </div>

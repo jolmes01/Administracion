@@ -14,7 +14,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletPoliza</servlet-name>
-        <url-pattern>/aplicacion/poliza</url-pattern>
+        <url-pattern>/poliza</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
