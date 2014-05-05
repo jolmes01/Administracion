@@ -45,6 +45,11 @@
             BeanCuentas cuenta = (BeanCuentas) session.getAttribute("cuentasE");
             Map<Integer, Cuenta> map = cuenta.getCuenta();
             Iterator<Map.Entry<Integer, Cuenta>> it = map.entrySet().iterator();
+            ArrayList<Cuenta> cuentasList = new ArrayList<Cuenta>();
+            while (it.hasNext()) {
+                Cuenta c = it.next().getValue();
+                cuentasList.add(c);
+            }
         %>
         <!--    Navbar (Menú barra azul)     -->
         <%@include file="layouts/navbar.html" %>
@@ -55,154 +60,7 @@
                     <div class="12u">
                         <section>
                             <h2>Cátalogo de cuentas de: </h2>
-                            <div class="panel-group" id="accordion">
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                                                Alta de cuentas
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <form class="form-horizontal" role="form">
-                                                <div class="form-group">
-                                                    <label for="cuentaN" class="col-sm-2 control-label">Cuenta</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="cuentaN" class="form-control">
-                                                            <%
-                                                                Connection con = new AccesBD().conexion();
-                                                                PreparedStatement ps = con.prepareStatement("SELECT idcuenta,descripcion FROM cuenta ORDER BY descripcion");
-                                                                ps.execute();
-                                                                ResultSet rs = ps.getResultSet();
-                                                                while (rs.next()) {
-                                                                    if (!map.containsKey(rs.getInt("idcuenta"))) {
-                                                            %>
-                                                            <option value="<%= rs.getString("idcuenta")%>"><%= rs.getString("descripcion")%></option>
-                                                            <% }
-                                                                }
-                                                                con.close(); %>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="saldo" class="col-sm-2 control-label">Saldo inicial</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="saldo" placeholder="Tu saldo" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-2 col-sm-10">
-                                                        <button type="submit" class="btn btn-success">Enviar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                                Alta de subcuenta
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <form class="form-horizontal" role="form">
-                                                <div class="form-group">
-                                                    <label for="cuentaSubN" class="col-sm-2 control-label">Cuenta</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="cuentaSubN" class="form-control">
-                                                            <%
-                                                                con = new AccesBD().conexion();
-                                                                ps = con.prepareStatement("SELECT idCuentaC,descripcion FROM cuentas WHERE idEmpresaC LIKE 1 AND idSubCuenta IS null ORDER BY descripcion");
-                                                                ps.execute();
-                                                                rs = ps.getResultSet();
-                                                                while (rs.next()) {
-                                                            %>
-                                                            <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
-                                                            <% }
-                                                                con.close();%>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="idSub" class="col-sm-2 control-label">ID SubCuenta</label>
-                                                    <div class="col-sm-10">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <input id="automatic" type="checkbox" checked/>Calcular Automático
-                                                            </span>
-                                                            <input id="idSub" type="text" class="form-control" placeholder="ID Consecutivo 1,2,3,...">
-                                                        </div><!-- /input-group -->
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="descripcionSub" class="col-sm-2 control-label">Descripción</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="descripcionSub" placeholder="Descripción de la subcuenta" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="saldoSub" class="col-sm-2 control-label">Saldo inicial</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="saldoSub" placeholder="Tu saldo inicial de subcuenta" />
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-2 col-sm-10">
-                                                        <button type="submit" class="btn btn-success">Enviar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-danger">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-                                                Baja de cuentas
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseThree" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <form class="form-horizontal" role="form">
-                                                <div class="form-group">
-                                                    <label for="bajaCuenta" class="col-sm-2 control-label">Cuenta</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="bajaCuenta" class="form-control">
-                                                            <%
-                                                                con = new AccesBD().conexion();
-                                                                ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC");
-                                                                ps.execute();
-                                                                rs = ps.getResultSet();
-                                                                while (rs.next()) {
-                                                                    if (rs.getString("idSubCuenta") == null || rs.getString("idSubCuenta") == "null") {
-                                                            %>
-                                                            <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
-                                                            <% } else {%>
-                                                            <option value="<%= rs.getString("idcuentaC")%>.<%= rs.getString("idSubCuenta")%>"><%= rs.getString("idcuentaC") + "." + rs.getString("idSubCuenta") + " - " + rs.getString("descripcionSub")%></option>
-                                                            <% }
-                                                                }
-                                                                con.close();%>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-offset-2 col-sm-10">
-                                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <%@include file="../forms/cuentasControl.html" %>
                             <ul class="nav nav-pills">
                                 <li class="active"><a href="#Activos" data-toggle="tab">Activos</a></li>
                                 <li><a href="#Pasivos" data-toggle="tab">Pasivos</a></li>
@@ -219,28 +77,52 @@
                                 <div class="tab-pane fade" id="Deudoras"><%@include file="../forms/deudoras.html" %></div>
                                 <div class="tab-pane fade" id="Acreedoras"><%@include file="../forms/acreedoras.html" %></div>
                             </div>
-                            <form action="cuentas" method="post" class=""
-                    </section>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="footer-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="12u">
-                    <div id="copyright">
-                        &copy; Sistema Contable (SisCon). All rights reserved.
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- ********************************************************* -->
-    <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script -->
-    <script src="../dist/js/bootstrap.min.js"></script>
-    <script src="../dist/js/docs.min.js"></script>
+        <div id="footer-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="12u">
+                        <div id="copyright">
+                            &copy; Sistema Contable (SisCon). All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- CONTROL DE ALERTS -->
+        <%
+            if (session.getAttribute("Respuesta") != null) {
+                boolean respuesta = Boolean.parseBoolean(session.getAttribute("Respuesta").toString());
+                session.removeAttribute("Respuesta");
+                String mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
+                String detalles = respuesta ? "Se acaba de agregar la cuenta a tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+        %>
+        <div class="modal fade" id="ModalResp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"><%= mensajeR%></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="lead"><%= detalles%></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Aceptar</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <% }%>
+        <!-- ********************************************************* -->
+        <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script -->
+        <script src="../dist/js/bootstrap.min.js"></script>
+        <script src="../dist/js/docs.min.js"></script>
+        <script src="../dist/js/cuentas.js"></script>
 
-</body>
+    </body>
 </html>
-
