@@ -143,7 +143,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta);
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE 1");
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -160,27 +160,25 @@ public class BeanCuentas {
         return resultado;
     }
 
-    /*public boolean dropCuenta(int parseInt) {
-     boolean resultado = false;
-     try {
-     Connection con = new AccesBD().conexion();
-     PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-     + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta IS");
-     boolean result = ps.execute();
-     con.close();
-     if (!result) {
-     Cuenta c = cuenta.get(idCuenta);
-     SubCuenta sub = c.getSubCuenta(idSubCuenta);
-     c.removeSubCuenta(sub);
-     cuenta.remove(idCuenta);
-     cuenta.put(idCuenta, c);
-     resultado = true;
-     }
-     } catch (SQLException ex) {
-     Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     return resultado;
-     }*/
+    public boolean dropCuenta(int idCuenta) {
+        boolean resultado = false;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
+                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta IS NULL AND idEmpresaC LIKE 1");
+            boolean result = ps.execute();
+            con.close();
+            if (!result) {
+                Cuenta c = cuenta.get(idCuenta);
+                cuenta.remove(idCuenta);
+                resultado = true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+    }
+
     private void updateDinero(int idCuenta, double saldo) {
         try {
             Connection con = new AccesBD().conexion();
@@ -191,5 +189,4 @@ public class BeanCuentas {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

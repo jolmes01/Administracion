@@ -58,7 +58,7 @@ public class ServletControlador extends HttpServlet {
                 registraCuentaE(request, response, out, cuentas);
             }
             if ("cuentaD".equals(submit)) {
-                //bajaCuenta(request, response, out, cuentas);
+                bajaCuenta(request, response, out, cuentas);
             }
         } else {
             getCuentas(request, response, out, cuentas);
@@ -116,10 +116,6 @@ public class ServletControlador extends HttpServlet {
     private void registraCuentaG(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
         double saldoD = 0.0;
         int idCuenta = Integer.parseInt(request.getParameter("cuentaN"));
-        String saldo = request.getParameter("saldoText");
-        if (saldo != null && !"".equals(saldo)) {
-            saldoD = Double.valueOf(saldo);
-        }
         boolean result = cuentas.addCuenta(idCuenta, saldoD);
         try {
             HttpSession ses = request.getSession(true);
@@ -137,14 +133,10 @@ public class ServletControlador extends HttpServlet {
         String automatico = request.getParameter("automatic");
         String idSub = request.getParameter("idSub");
         String descripcion = request.getParameter("descripcionSub");
-        String saldo = request.getParameter("saldoSub");
         if ("calcular".equals(automatico)) {
             idSubD = cuentas.getTotalSubCuentas(idCuenta) + 1;
         } else {
             idSubD = Integer.parseInt(idSub);
-        }
-        if (saldo != null && !"".equals(saldo)) {
-            saldoD = Double.valueOf(saldo);
         }
         boolean result = cuentas.addCuenta(idCuenta, idSubD, descripcion, saldoD);
         try {
@@ -156,16 +148,24 @@ public class ServletControlador extends HttpServlet {
         }
     }
 
-    /*private void bajaCuenta(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
-     String cuenta = request.getParameter("bajaCuenta");
-     boolean result = false;
-     if(cuenta.length() > 4){
-     String cuentasList[] = cuenta.split(".");
-     int idCuenta = Integer.parseInt(cuentasList[0]);
-     int idSubCuenta = Integer.parseInt(cuentasList[1]);
-     result = cuentas.dropCuenta(idCuenta,idSubCuenta);
-     }else{
-     result = cuentas.dropCuenta(Integer.parseInt(cuenta));
-     }
-     }*/
+    private void bajaCuenta(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
+        String cuenta = request.getParameter("bajaCuenta");
+        boolean result = false;
+        if (cuenta.length() > 4) {
+            int idCuenta = Integer.parseInt(cuenta.substring(0, 4));
+            int idSubCuenta = Integer.parseInt(cuenta.substring(cuenta.indexOf(".") + 1));
+            System.out.println(idCuenta);
+            System.out.println(idSubCuenta);
+            result = cuentas.dropCuenta(idCuenta, idSubCuenta);
+        } else {
+            result = cuentas.dropCuenta(Integer.parseInt(cuenta));
+        }
+        try {
+            HttpSession ses = request.getSession();
+            ses.setAttribute("RespuestaE", result);
+            response.sendRedirect("./catalogo.jsp");
+        } catch (IOException ex) {
+            Logger.getLogger(ServletControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

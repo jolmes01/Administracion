@@ -62,7 +62,7 @@ public class Cuenta {
     }
 
     public SubCuenta getSubCuenta(int idSubCuenta) {
-        SubCuenta s = null;
+        SubCuenta s = new SubCuenta();
         for (SubCuenta sub : subcuentas) {
             if (sub.getIdSubCuenta() == idSubCuenta) {
                 s = sub;

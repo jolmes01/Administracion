@@ -95,11 +95,23 @@
         </div>
         <!-- CONTROL DE ALERTS -->
         <%
+            String mensajeR = "";
+            String detalles = "";
+            boolean mostrar = false;
             if (session.getAttribute("Respuesta") != null) {
+                mostrar = true;
                 boolean respuesta = Boolean.parseBoolean(session.getAttribute("Respuesta").toString());
                 session.removeAttribute("Respuesta");
-                String mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
-                String detalles = respuesta ? "Se acaba de agregar la cuenta a tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+                mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
+                detalles = respuesta ? "Se acaba de agregar la cuenta a tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+            } else if (session.getAttribute("RespuestaE") != null) {
+                mostrar = true;
+                boolean respuesta = Boolean.parseBoolean(session.getAttribute("RespuestaE").toString());
+                session.removeAttribute("RespuestaE");
+                mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
+                detalles = respuesta ? "Se acaba de borrar la cuenta de tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+            }
+            if (mostrar) {
         %>
         <div class="modal fade" id="ModalResp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -117,7 +129,7 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        <% }%>
+        <% } %>
         <!-- ********************************************************* -->
         <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script -->
         <script src="../dist/js/bootstrap.min.js"></script>

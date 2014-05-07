@@ -35,12 +35,14 @@ public class BeanPoliza {
     public String addPoliza(String polizaId, String cuentaP, String fechaMov, String tipo, String pago) {
         int idCuenta = 0;
         int idSubC = 0;
+        int valorDeSobrePaso = 0;
         if (cuentaP.length() > 4) {
-            String cuentasList[] = cuentaP.split(".");
-            idCuenta = Integer.parseInt(cuentasList[0]);
-            idSubC = Integer.parseInt(cuentasList[1]);
+            idCuenta = Integer.parseInt(cuentaP.substring(0, 4));
+            idSubC = Integer.parseInt(cuentaP.substring(cuentaP.indexOf(".") + 1));
+            valorDeSobrePaso = getSobrePaso(idCuenta,idSubC);
         } else {
             idCuenta = Integer.parseInt(cuentaP);
+            valorDeSobrePaso = getSobrePaso(idCuenta);
         }
         int polID = Integer.parseInt(polizaId);
         Poliza p;
@@ -138,6 +140,26 @@ public class BeanPoliza {
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
         }
         return descripcion;
+    }
+
+    private int getSobrePaso(int idCuenta, int idSubC, int cargo) {
+        int valorDeSobrePaso = 0;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM cuenta_empresa WHERE idEmpresaC LIKE 1 AND idCuentaC LIKE ? AND idSubCuenta LIKE ? AND saldo >= ");
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if (rs.next()) {
+                valorDeSobrePaso = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return valorDeSobrePaso;
+    }
+
+    private int getSobrePaso(int idCuenta) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

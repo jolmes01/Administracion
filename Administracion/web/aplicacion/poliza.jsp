@@ -119,6 +119,10 @@
     <body onload="cargar()">
         <%
             BeanCuentas cuenta = (BeanCuentas) session.getAttribute("cuentasE");
+            if(cuenta == null){
+                cuenta = new BeanCuentas();
+                session.setAttribute("cuentasE", cuenta);
+            }
             Map<Integer, Cuenta> map = cuenta.getCuenta();
             Iterator<Map.Entry<Integer, Cuenta>> it = map.entrySet().iterator();
             ArrayList<Cuenta> cuentasList = new ArrayList<Cuenta>();
