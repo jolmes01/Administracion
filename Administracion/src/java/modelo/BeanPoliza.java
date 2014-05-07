@@ -35,14 +35,14 @@ public class BeanPoliza {
     public String addPoliza(String polizaId, String cuentaP, String fechaMov, String tipo, String pago) {
         int idCuenta = 0;
         int idSubC = 0;
-        int valorDeSobrePaso = 0;
+        //int valorDeSobrePaso = 0;
         if (cuentaP.length() > 4) {
             idCuenta = Integer.parseInt(cuentaP.substring(0, 4));
             idSubC = Integer.parseInt(cuentaP.substring(cuentaP.indexOf(".") + 1));
-            valorDeSobrePaso = getSobrePaso(idCuenta,idSubC);
+            //valorDeSobrePaso = getSobrePaso(idCuenta,idSubC);
         } else {
             idCuenta = Integer.parseInt(cuentaP);
-            valorDeSobrePaso = getSobrePaso(idCuenta);
+            //valorDeSobrePaso = getSobrePaso(idCuenta);
         }
         int polID = Integer.parseInt(polizaId);
         Poliza p;
@@ -69,9 +69,9 @@ public class BeanPoliza {
         String retorno = getHistory();
         return retorno;
     }
-    
-    public String delPoliza(String idPoliza,String index){
-        System.err.println(idPoliza+"-"+index);
+
+    public String delPoliza(String idPoliza, String index) {
+        System.err.println(idPoliza + "-" + index);
         Poliza p = polizas.get(Integer.parseInt(idPoliza));
         p.removeData(Integer.parseInt(index));
         return getHistory();
@@ -88,18 +88,18 @@ public class BeanPoliza {
         while (it.hasNext()) {
             Poliza pol = it.next().getValue();
             polizaList.add(pol);
-            partida = pol.getPartidaDoble() ? 0:1;
-            datosNull = pol.getIdCuenta().size() > 0 ? 1:0;
+            partida = pol.getPartidaDoble() ? 0 : 1;
+            datosNull = pol.getIdCuenta().size() > 0 ? 1 : 0;
             abonos += pol.getTotAbono();
             cargos += pol.getTotCargo();
         }
         String botonSend = "<tr>\n"
-                + "<th colspan=\"7\" class=\"text-center\"><p class=\"lead\"><button class=\"btn btn-success\">Registrar Poliza</button></p></th> \n"
+                + "<th colspan=\"7\" class=\"text-center\"><p class=\"lead\"><button class=\"btn btn-success\" onClick=\"registrarPoliza()\">Registrar Poliza</button></p></th> \n"
                 + "</tr>";
         String retorno = "<table class=\"table table-responsive\">\n"
                 + "                                    <thead>\n";
-        retorno += (((cargos-abonos == 0)&&polizas.size()>0)&&(partida == 0 && datosNull == 1)) ? botonSend : "";
-                retorno += "                                        <tr>\n"
+        retorno += (((cargos - abonos == 0) && polizas.size() > 0) && (partida == 0 && datosNull == 1)) ? botonSend : "";
+        retorno += "                                        <tr>\n"
                 + "                                            <th><p>No. de Poliza</p></th>\n"
                 + "                                    <th><p>Cuenta</p></th>\n"
                 + "                                    <th><p>Descripción</p></th>\n"
@@ -119,7 +119,7 @@ public class BeanPoliza {
                         + " <th>" + pCount.getFechaByIndex(i) + "</th>";
                 retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
                 retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
-                retorno += "<th><button class=\"btn btn-danger\" onclick=\"eliminar('" + pCount.getPoliza() + "."+i+"')\">Eliminar</button></th>";
+                retorno += "<th><button class=\"btn btn-danger\" onclick=\"eliminar('" + pCount.getPoliza() + "." + i + "')\">Eliminar</button></th>";
             }
         }
         retorno += "</tbody></table>";
@@ -130,7 +130,7 @@ public class BeanPoliza {
         String descripcion = "";
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT descripcion FROM cuenta WHERE idcuenta LIKE "+idCuentaByIndex);
+            PreparedStatement ps = con.prepareStatement("SELECT descripcion FROM cuenta WHERE idcuenta LIKE " + idCuentaByIndex);
             ps.execute();
             ResultSet rs = ps.getResultSet();
             if (rs.next()) {
@@ -160,6 +160,48 @@ public class BeanPoliza {
 
     private int getSobrePaso(int idCuenta) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String registroPoliza() {
+        String resultado = "";
+        boolean res = false;
+        Map<Integer, Poliza> map = polizas;
+        Iterator<Map.Entry<Integer, Poliza>> it = map.entrySet().iterator();
+        ArrayList<Poliza> polizaList = new ArrayList<Poliza>();
+        try {
+            Connection con = new AccesBD().conexion();
+            while (it.hasNext()) {
+                /* idEmpresaP - idCuentaP - idSubCuentaP
+                 NoPoliza - fecha - Cargo - Abonos*/
+                Poliza pol = it.next().getValue();
+                int idPoliza = pol.getPoliza();
+                for (int i = 0; i < pol.getIdCuenta().size(); i++) {
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO poliza VALUES(1,?,?,?,?,?,?)");
+                    ps.setInt(1, pol.getIdCuentaByIndex(i));
+                    ps.setInt(2, pol.getIdSubCuentaByIndex(i));
+                    ps.setInt(3, idPoliza);
+                    ps.setString(4, pol.getFechaByIndex(i));
+                    ps.setInt(5, pol.getCargoByIndex(i));
+                    ps.setInt(6, pol.getAbonoByIndex(i));
+                    res = ps.execute();
+                }
+            }
+            con.close();
+            if (!res) {
+                resultado = "<div class=\"alert alert-success alert-dismissable\">\n"
+                        + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
+                        + "  <strong>Correcto!</strong> Tu poliza se ha registrado correctamente en tu cuenta."
+                        + "</div>";
+                polizas.clear();
+            }
+        } catch (SQLException ex) {
+            resultado = "<div class=\"alert alert-danger alert-dismissable\">\n"
+                    + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
+                    + "  <strong>Ups!</strong> Hubo un error en tu conexión y no se pudo registrar tu poliza."
+                    + "</div>";
+            Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultado;
     }
 
 }

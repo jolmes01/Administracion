@@ -96,6 +96,22 @@
                     document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
                 }
             }
+
+            function registrarPoliza() {
+                var request = get_XmlHttp();
+
+                var parametros = "comando=3";
+                request.open("POST", "../poliza", true);
+
+                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                request.send(parametros);
+                request.onreadystatechange = function()
+                {
+                    var ex_ajsn = request.responseText;
+                    document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                }
+            }
+
             function eliminar(vItem) {
                 var request = get_XmlHttp();
                 var pItem = "item=" + vItem;
@@ -119,7 +135,7 @@
     <body onload="cargar()">
         <%
             BeanCuentas cuenta = (BeanCuentas) session.getAttribute("cuentasE");
-            if(cuenta == null){
+            if (cuenta == null) {
                 cuenta = new BeanCuentas();
                 session.setAttribute("cuentasE", cuenta);
             }

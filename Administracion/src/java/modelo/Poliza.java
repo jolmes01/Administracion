@@ -148,6 +148,10 @@ public class Poliza {
         return idCuenta.get(i);
     }
     
+    public int getIdSubCuentaByIndex(int i){
+        return idSubC.get(i);
+    }
+    
     public String getFechaByIndex(int i){
         return fecha.get(i);
     }

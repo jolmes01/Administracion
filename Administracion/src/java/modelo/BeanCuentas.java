@@ -165,7 +165,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuenta LIKE " + idCuenta + " AND idSubCuenta IS NULL AND idEmpresaC LIKE 1");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta IS NULL AND idEmpresaC LIKE 1 AND saldo LIKE 0");
             boolean result = ps.execute();
             con.close();
             if (!result) {

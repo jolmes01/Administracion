@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div class="panel-group" id="accordion">
-    <div class="panel panel-info">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-info">
+    <div class="panel panel-primary">
         <div class="panel-heading">
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
@@ -105,14 +105,17 @@
             <div class="panel-body">
                 <form action="cuentas" method="post" class="form-horizontal" role="form">
                     <div class="form-group">
+                        <%
+                        con = new AccesBD().conexion();
+                        ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 AND saldo LIKE 0 ORDER BY idCuentaC,idSubCuenta");
+                        ps.execute();
+                        rs = ps.getResultSet();
+                        if(rs.getRow() != 0){
+                        %>
                         <label for="bajaCuenta" class="col-md-2 control-label">Cuenta</label>
                         <div class="col-md-6">
                             <select id="bajaCuenta" name="bajaCuenta" class="form-control">
                                 <%
-                                con = new AccesBD().conexion();
-                                ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 AND saldo LIKE 0 ORDER BY idCuentaC,idSubCuenta");
-                                ps.execute();
-                                rs = ps.getResultSet();
                                 while (rs.next()) {
                                 if (rs.getString("idSubCuenta") == null || rs.getString("idSubCuenta") == "null") {
                                 %>
@@ -130,6 +133,12 @@
                             <button type="submit" name="submit" class="btn btn-danger" value="cuentaD">Eliminar</button>
                         </div>
                     </div>
+                    <% }else { %>
+                    <div class="alert alert-warning alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <strong>NOTA!<%= rs %></strong> Para poder dar de baja debes de contar con cuentas que esten con saldo en $0.
+                    </div>
+                    <% } %>
                 </form>
             </div>
         </div>

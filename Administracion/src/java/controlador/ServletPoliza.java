@@ -56,7 +56,7 @@ public class ServletPoliza extends HttpServlet {
                 eliminar(request, response, out, poliza);
                 break;
             case 3:
-                //eliminar(request, response, out, poliza);
+                submitPoliza(request, response, out, poliza);
                 break;
             case 4:
                 //vaciar(request, response, out, producto);
@@ -92,6 +92,10 @@ public class ServletPoliza extends HttpServlet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void submitPoliza(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanPoliza poliza) {
+        out.println(poliza.registroPoliza());
     }
 
 }
