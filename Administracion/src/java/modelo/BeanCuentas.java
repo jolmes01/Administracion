@@ -92,7 +92,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
-                    + "VALUES(1," + idCuenta + ",null,null," + saldo + ")");
+                    + "VALUES(1," + idCuenta + ",0,null," + saldo + ")");
             boolean result = ps.execute();
             if (!result) {
                 ps.execute("SELECT descripcion FROM cuenta WHERE idcuenta = " + idCuenta);
@@ -165,7 +165,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta IS NULL AND idEmpresaC LIKE 1 AND saldo LIKE 0");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE 0 AND idEmpresaC LIKE 1 AND saldo LIKE 0");
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -183,7 +183,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("UPDATE cuenta_empresa "
-                    + "SET saldo = (saldo+" + saldo + ") WHERE idCuentaC = " + idCuenta + " AND idSubCuenta IS NULL;");
+                    + "SET saldo = (saldo+" + saldo + ") WHERE idCuentaC = " + idCuenta + " AND idSubCuenta LIKE 0;");
             ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);

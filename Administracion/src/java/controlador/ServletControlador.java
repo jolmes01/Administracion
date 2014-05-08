@@ -114,7 +114,7 @@ public class ServletControlador extends HttpServlet {
     }
 
     private void registraCuentaG(HttpServletRequest request, HttpServletResponse response, PrintWriter out, BeanCuentas cuentas) {
-        double saldoD = 0.0;
+        double saldoD = 0;
         int idCuenta = Integer.parseInt(request.getParameter("cuentaN"));
         boolean result = cuentas.addCuenta(idCuenta, saldoD);
         try {

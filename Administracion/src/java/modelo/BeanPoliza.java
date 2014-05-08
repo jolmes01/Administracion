@@ -125,6 +125,55 @@ public class BeanPoliza {
         retorno += "</tbody></table>";
         return retorno;
     }
+    
+    public String loadFail(boolean check) {
+        Map<Integer, Poliza> map = polizas;
+        Iterator<Map.Entry<Integer, Poliza>> it = map.entrySet().iterator();
+        ArrayList<Poliza> polizaList = new ArrayList<Poliza>();
+        int cargos = 0;
+        int abonos = 0;
+        int partida = 0;
+        int datosNull = 0;
+        while (it.hasNext()) {
+            Poliza pol = it.next().getValue();
+            polizaList.add(pol);
+            partida = pol.getPartidaDoble() ? 0 : 1;
+            datosNull = pol.getIdCuenta().size() > 0 ? 1 : 0;
+            abonos += pol.getTotAbono();
+            cargos += pol.getTotCargo();
+        }
+        String botonSend = "<tr>\n"
+                + "<th colspan=\"7\" class=\"text-center\"><p class=\"lead\"><button class=\"btn btn-success\" onClick=\"registrarPoliza()\">Registrar Poliza</button></p></th> \n"
+                + "</tr>";
+        String retorno = "<table class=\"table table-responsive\">\n"
+                + "                                    <thead>\n";
+        retorno += (((cargos - abonos == 0) && polizas.size() > 0) && (partida == 0 && datosNull == 1) && check) ? botonSend : "";
+        retorno += "                                        <tr>\n"
+                + "                                            <th><p>No. de Poliza</p></th>\n"
+                + "                                    <th><p>Cuenta</p></th>\n"
+                + "                                    <th><p>Descripción</p></th>\n"
+                + "                                    <th><p>Fecha del movimiento</p></th>\n"
+                + "                                    <th><p>Cargos</p></th>\n"
+                + "                                    <th><p>Abonos</p></th>\n"
+                + "                                    <th><p>Borrar</p></th>\n"
+                + "                                    </tr>\n"
+                + "                                    </thead>\n"
+                + "                                    <tbody>\n";
+        for (Poliza pCount : polizaList) {
+            for (int i = 0; i < pCount.getIdCuenta().size(); i++) {
+                retorno += pCount.getPartidaDoble() ? "<tr class=\"alert alert-success\">" : "<tr class=\"alert alert-danger\">";
+                retorno += " <th>" + pCount.getPoliza() + "</th>"
+                        + " <th>" + pCount.getIdCuentaByIndex(i) + "</th>"
+                        + " <th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>"
+                        + " <th>" + pCount.getFechaByIndex(i) + "</th>";
+                retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
+                retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
+                retorno += "<th><button class=\"btn btn-danger\" onclick=\"eliminar('" + pCount.getPoliza() + "." + i + "')\">Eliminar</button></th>";
+            }
+        }
+        retorno += "</tbody></table>";
+        return retorno;
+    }
 
     private String getDescripcionCuenta(int idCuentaByIndex) {
         String descripcion = "";
@@ -164,12 +213,11 @@ public class BeanPoliza {
 
     public String registroPoliza() {
         String resultado = "";
-        boolean res = false;
         Map<Integer, Poliza> map = polizas;
         Iterator<Map.Entry<Integer, Poliza>> it = map.entrySet().iterator();
-        ArrayList<Poliza> polizaList = new ArrayList<Poliza>();
         try {
             Connection con = new AccesBD().conexion();
+            int valorFirtsQuery = 0;
             while (it.hasNext()) {
                 /* idEmpresaP - idCuentaP - idSubCuentaP
                  NoPoliza - fecha - Cargo - Abonos*/
@@ -183,16 +231,53 @@ public class BeanPoliza {
                     ps.setString(4, pol.getFechaByIndex(i));
                     ps.setInt(5, pol.getCargoByIndex(i));
                     ps.setInt(6, pol.getAbonoByIndex(i));
-                    res = ps.execute();
+                    Connection cambio = new AccesBD().conexion();
+                    String operador = "";
+                    String subCuenta = " AND idSubCuenta = 0";
+                    int saldo = 0;
+                    if (pol.getIdSubCuentaByIndex(i) != 0) {
+                        subCuenta = " AND idSubCuenta LIKE " + pol.getIdSubCuentaByIndex(i);
+                    }
+                    if (pol.getIdCuentaByIndex(i) < 2000) {
+                        if (pol.getCargoByIndex(i) != 0) {
+                            operador = "+";
+                            saldo = pol.getCargoByIndex(i);
+                        } else {
+                            operador = "-";
+                            saldo = pol.getAbonoByIndex(i);
+                        }
+                    } else {
+                        if (pol.getCargoByIndex(i) != 0) {
+                            operador = "-";
+                            saldo = pol.getCargoByIndex(i);
+                        } else {
+                            operador = "+";
+                            saldo = pol.getAbonoByIndex(i);
+                        }
+                    }
+                    String validaMayor = (operador == "-") ? "saldo > " + saldo + " AND" : "";
+                    String sql = "UPDATE cuenta_empresa "
+                            + "SET saldo = (saldo" + operador + "" + saldo + ") WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + "" + subCuenta + " AND idEmpresaC LIKE 2";
+                    PreparedStatement psc = cambio.prepareStatement(sql);
+                    valorFirtsQuery = psc.executeUpdate();
+                    cambio.close();
+                    if (valorFirtsQuery == 1) {
+                        ps.execute();
+                    }
                 }
             }
             con.close();
-            if (!res) {
+            if (valorFirtsQuery == 1) {
                 resultado = "<div class=\"alert alert-success alert-dismissable\">\n"
                         + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
                         + "  <strong>Correcto!</strong> Tu poliza se ha registrado correctamente en tu cuenta."
                         + "</div>";
                 polizas.clear();
+            } else {
+                resultado = "<div class=\"alert alert-danger alert-dismissable\">\n"
+                        + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
+                        + "  <strong>OJO!</strong> El movimiento de tus saldos ingresados en la poliza, exceden de tu saldo, por seguridad, te pedimos verifiques los datos ya que por ahora no se guardo tu poliza en el Sistema."
+                        + "</div>" + loadFail(false);
             }
         } catch (SQLException ex) {
             resultado = "<div class=\"alert alert-danger alert-dismissable\">\n"
