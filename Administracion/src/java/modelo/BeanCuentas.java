@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -85,6 +86,61 @@ public class BeanCuentas {
         } catch (SQLException ex) {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getSaldo(int idCuenta) {
+        String descripcion = "";
+        String saldo = "";
+        String mensaje = "";
+        DecimalFormat df = new DecimalFormat("###,###,###,###.00");
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idCuentaC LIKE " + idCuenta + " AND idEmpresaC LIKE 1");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                descripcion = rs.getString("descripcion");
+                saldo = rs.getString("saldo");
+                mensaje = "<div class=\"alert alert-success\">"
+                        + "<p class=\"lead\">El saldo de la cuenta <strong>"+descripcion+"</strong> "
+                        + "es <small>"+df.format(Double.valueOf(saldo))+"</small></p></div>";
+            }else{
+                mensaje = "<div class=\"alert alert-warning\">"
+                        + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
+            }
+        } catch (SQLException ex) {
+            mensaje = "<div class=\"alert alert-danger\">No se pudo consultar tu saldo en estos momentos</div>";
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return mensaje;
+    }
+
+    public String getSaldoSub(int idCuenta, int idSubCuenta) {
+        String descripcion = "";
+        String descripSub = "";
+        String saldo = "";
+        String mensaje = "";
+        DecimalFormat df = new DecimalFormat("###,###,###,###.00");
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT descripcion,descripcionSub,saldo FROM cuentas "
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE "+idSubCuenta+" AND idEmpresaC LIKE 1");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                descripcion = rs.getString("descripcion");
+                descripSub = rs.getString("descripcionSub");
+                saldo = rs.getString("saldo");
+                mensaje = "<div class=\"alert alert-success\">"
+                        + "<p class=\"lead\">El saldo de la cuenta <strong>"+descripcion+"</strong> con subcuenta <strong>"+descripSub+"</strong> "
+                        + "es <small>"+df.format(Double.valueOf(saldo))+"</small></p></div>";
+            }else{
+                mensaje = "<div class=\"alert alert-warning\">"
+                        + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
+            }
+        } catch (SQLException ex) {
+            mensaje = "<div class=\"alert alert-danger\">No se pudo consultar tu saldo en estos momentos</div>";
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return mensaje;
     }
 
     public boolean addCuenta(int idCuenta, double saldo) {

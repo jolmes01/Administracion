@@ -71,7 +71,6 @@ public class BeanPoliza {
     }
 
     public String delPoliza(String idPoliza, String index) {
-        System.err.println(idPoliza + "-" + index);
         Poliza p = polizas.get(Integer.parseInt(idPoliza));
         p.removeData(Integer.parseInt(index));
         return getHistory();
@@ -125,7 +124,7 @@ public class BeanPoliza {
         retorno += "</tbody></table>";
         return retorno;
     }
-    
+
     public String loadFail(boolean check) {
         Map<Integer, Poliza> map = polizas;
         Iterator<Map.Entry<Integer, Poliza>> it = map.entrySet().iterator();
@@ -255,11 +254,20 @@ public class BeanPoliza {
                             saldo = pol.getAbonoByIndex(i);
                         }
                     }
-                    String validaMayor = (operador == "-") ? "saldo > " + saldo + " AND" : "";
+                    String validaMayor = (operador == "-") ? "saldo >= " + saldo + " AND" : "";
                     String sql = "UPDATE cuenta_empresa "
-                            + "SET saldo = (saldo" + operador + "" + saldo + ") WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + "" + subCuenta + " AND idEmpresaC LIKE 2";
+                            + "SET saldo = (saldo" + operador + "" + saldo + ") WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + "" + subCuenta + " AND idEmpresaC LIKE 1";
+                    System.out.println(sql);
                     PreparedStatement psc = cambio.prepareStatement(sql);
                     valorFirtsQuery = psc.executeUpdate();
+                    if (pol.getIdSubCuentaByIndex(i) != 0 && valorFirtsQuery == 1) {
+                        sql = "UPDATE cuenta_empresa "
+                                + "SET saldo = (saldo" + operador + "" + saldo + ") "
+                                + "WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + " AND idSubCuenta = 0"
+                                + " AND idEmpresaC LIKE 1";
+                        System.out.println(sql);
+                        valorFirtsQuery = psc.executeUpdate(sql);
+                    }
                     cambio.close();
                     if (valorFirtsQuery == 1) {
                         ps.execute();
@@ -270,19 +278,19 @@ public class BeanPoliza {
             if (valorFirtsQuery == 1) {
                 resultado = "<div class=\"alert alert-success alert-dismissable\">\n"
                         + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
-                        + "  <strong>Correcto!</strong> Tu poliza se ha registrado correctamente en tu cuenta."
+                        + "  <p class=\"lead\"><strong>Correcto!</strong> Tu poliza se ha registrado correctamente en tu cuenta.</p>"
                         + "</div>";
                 polizas.clear();
             } else {
                 resultado = "<div class=\"alert alert-danger alert-dismissable\">\n"
                         + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
-                        + "  <strong>OJO!</strong> El movimiento de tus saldos ingresados en la poliza, exceden de tu saldo, por seguridad, te pedimos verifiques los datos ya que por ahora no se guardo tu poliza en el Sistema."
+                        + "  <p class=\"lead\"> <strong>OJO!</strong> El movimiento de tus saldos ingresados en la poliza, exceden de tu saldo, por seguridad, te pedimos verifiques los datos ya que por ahora no se guardo tu poliza en el Sistema. </p>"
                         + "</div>" + loadFail(false);
             }
         } catch (SQLException ex) {
             resultado = "<div class=\"alert alert-danger alert-dismissable\">\n"
                     + "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>\n"
-                    + "  <strong>Ups!</strong> Hubo un error en tu conexión y no se pudo registrar tu poliza."
+                    + "  <p class=\"lead\"><strong>Ups!</strong> Hubo un error en tu conexión y no se pudo registrar tu poliza.</p>"
                     + "</div>";
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -56,7 +56,7 @@
                             <select id="cuentaSubN" name="cuentaSubN" class="form-control">
                                 <%
                                 con = new AccesBD().conexion();
-                                ps = con.prepareStatement("SELECT idCuentaC,descripcion FROM cuentas WHERE idEmpresaC LIKE 1 AND idSubCuenta IS null ORDER BY idCuentaC");
+                                ps = con.prepareStatement("SELECT idCuentaC,descripcion FROM cuentas WHERE idEmpresaC LIKE 1 AND idSubCuenta LIKE 0 ORDER BY idCuentaC");
                                 ps.execute();
                                 rs = ps.getResultSet();
                                 while (rs.next()) {
@@ -107,17 +107,24 @@
                     <div class="form-group">
                         <%
                         con = new AccesBD().conexion();
+                        ps = con.prepareStatement("SELECT COUNT(*) FROM cuentas WHERE idEmpresaC LIKE 1 AND saldo LIKE 0 ORDER BY idCuentaC,idSubCuenta");
+                        ps.execute();
+                        rs = ps.getResultSet();
+                        int ultimo = 0;
+                        if(rs.next()){
+                            ultimo = rs.getInt(1);
+                        }
                         ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 AND saldo LIKE 0 ORDER BY idCuentaC,idSubCuenta");
                         ps.execute();
                         rs = ps.getResultSet();
-                        if(rs.getRow() != 0){
+                        if(ultimo != 0){
                         %>
                         <label for="bajaCuenta" class="col-md-2 control-label">Cuenta</label>
                         <div class="col-md-6">
                             <select id="bajaCuenta" name="bajaCuenta" class="form-control">
                                 <%
                                 while (rs.next()) {
-                                if (rs.getString("idSubCuenta") == null || rs.getString("idSubCuenta") == "null") {
+                                if (rs.getInt("idSubCuenta") == 0) {
                                 %>
                                 <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
                                 <% } else {%>
@@ -136,7 +143,7 @@
                     <% }else { %>
                     <div class="alert alert-warning alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <strong>NOTA!<%= rs %></strong> Para poder dar de baja debes de contar con cuentas que esten con saldo en $0.
+                        <strong>NOTA!</strong> Para poder dar de baja debes de contar con cuentas que esten con saldo en $0.
                     </div>
                     <% } %>
                 </form>
