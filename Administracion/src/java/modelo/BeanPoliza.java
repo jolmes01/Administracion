@@ -112,10 +112,11 @@ public class BeanPoliza {
         for (Poliza pCount : polizaList) {
             for (int i = 0; i < pCount.getIdCuenta().size(); i++) {
                 retorno += pCount.getPartidaDoble() ? "<tr class=\"alert alert-success\">" : "<tr class=\"alert alert-danger\">";
-                retorno += " <th>" + pCount.getPoliza() + "</th>"
-                        + " <th>" + pCount.getIdCuentaByIndex(i) + "</th>"
-                        + " <th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>"
-                        + " <th>" + pCount.getFechaByIndex(i) + "</th>";
+                retorno += " <th>" + pCount.getPoliza() + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>":" <th>" + pCount.getIdCuentaByIndex(i)+ "."+ pCount.getIdSubCuentaByIndex(i) +"</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>":
+                        "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i))+ "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
+                retorno += "<th>" + pCount.getFechaByIndex(i) + "</th>";
                 retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
                 retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
                 retorno += "<th><button class=\"btn btn-danger\" onclick=\"eliminar('" + pCount.getPoliza() + "." + i + "')\">Eliminar</button></th>";
@@ -161,10 +162,11 @@ public class BeanPoliza {
         for (Poliza pCount : polizaList) {
             for (int i = 0; i < pCount.getIdCuenta().size(); i++) {
                 retorno += pCount.getPartidaDoble() ? "<tr class=\"alert alert-success\">" : "<tr class=\"alert alert-danger\">";
-                retorno += " <th>" + pCount.getPoliza() + "</th>"
-                        + " <th>" + pCount.getIdCuentaByIndex(i) + "</th>"
-                        + " <th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>"
-                        + " <th>" + pCount.getFechaByIndex(i) + "</th>";
+                retorno += " <th>" + pCount.getPoliza() + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>":" <th>" + pCount.getIdCuentaByIndex(i)+ "."+ pCount.getIdSubCuentaByIndex(i) +"</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>":
+                        "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i))+ "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
+                retorno += "<th>" + pCount.getFechaByIndex(i) + "</th>";
                 retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
                 retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
                 retorno += "<th><button class=\"btn btn-danger\" onclick=\"eliminar('" + pCount.getPoliza() + "." + i + "')\">Eliminar</button></th>";
@@ -183,6 +185,22 @@ public class BeanPoliza {
             ResultSet rs = ps.getResultSet();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return descripcion;
+    }
+    
+    private String getDescripcionCuenta(int idCuentaByIndex, int idSub) {
+        String descripcion = "";
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT descripcionSub FROM cuentas WHERE idcuentaC LIKE " + idCuentaByIndex+" AND idSubCuenta LIKE "+idSub);
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if (rs.next()) {
+                descripcion = rs.getString("descripcionSub");
             }
         } catch (SQLException ex) {
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);

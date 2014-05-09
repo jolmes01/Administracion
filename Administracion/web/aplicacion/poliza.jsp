@@ -55,8 +55,8 @@
 
             function agregar()
             {
-
                 var request = get_XmlHttp();
+                var envio = true;
                 var poliza = document.getElementById("poliza").value;
                 var cuentaP = document.getElementById("cuentaP").value;
                 var fechaDeMov = document.getElementById("fechaDeMov").value;
@@ -68,18 +68,43 @@
                 }
                 var tipoCA = document.getElementById("tipoCA").value;
                 var params = "poliza=" + poliza + "&cuentaP=" + cuentaP + "&fechaDeMov=" + fechaDeMov + "&tipo=" + automatic + "&pago=" + tipoCA;
-
-                var parametros = "comando=1" + "&" + params;
-                request.open("POST", "../poliza", true);
-
-                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.send(parametros);
-                request.onreadystatechange = function()
-                {
-                    var ex_ajsn = request.responseText;
-                    document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                var mensajeTipo = "";
+                $('#poliza').tooltip('destroy');
+                $('#fechaDeMov').tooltip('destroy');
+                $('#tipoCA').tooltip('destroy');
+                if (poliza == "") {
+                    $('#poliza').tooltip({placement: 'right', title: "Debes seleccionar un dato"});
+                    $('#poliza').tooltip('show');
+                    envio = false;
                 }
-
+                if (fechaDeMov == "") {
+                    $('#fechaDeMov').tooltip({placement: 'right', title: "Debes establecer una fecha"});
+                    $('#fechaDeMov').tooltip('show');
+                    envio = false;
+                }
+                if (tipoCA == "") {
+                    mensajeTipo = "Debes poner el monto a registrar";
+                    $('#tipoCA').tooltip({placement: 'right', title: mensajeTipo});
+                    $('#tipoCA').tooltip('show');
+                    envio = false;
+                }
+                if (isNaN(tipoCA)) {
+                    mensajeTipo = "Deben der ser solo números";
+                    $('#tipoCA').tooltip({placement: 'right', title: mensajeTipo});
+                    $('#tipoCA').tooltip('show');
+                    envio = false;
+                }
+                var parametros = "comando=1" + "&" + params;
+                if (envio) {
+                    request.open("POST", "../poliza", true);
+                    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    request.send(parametros);
+                    request.onreadystatechange = function()
+                    {
+                        var ex_ajsn = request.responseText;
+                        document.getElementById("tablaPolizas").innerHTML = ex_ajsn;
+                    }
+                }
             }
 
             function cargar() {
@@ -139,7 +164,7 @@
                 cuenta = new BeanCuentas();
                 session.setAttribute("cuentasE", cuenta);
             }
-            Map<Integer, Cuenta> map = cuenta.getCuenta();
+            Map<Integer, Cuenta> map = cuenta.getCuentasSeparadas();
             Iterator<Map.Entry<Integer, Cuenta>> it = map.entrySet().iterator();
             ArrayList<Cuenta> cuentasList = new ArrayList<Cuenta>();
             while (it.hasNext()) {

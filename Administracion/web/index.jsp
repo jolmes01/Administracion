@@ -34,12 +34,17 @@
     </head>
     <body>
         <div class="container">
-            <form class="form-signin" action="aplicacion/principal.jsp" role="form">
+            <form class="form-signin" action="login" onSubmit="return valida()" role="form">
                 <h2 class="form-signin-heading">Inicia sesi&oacute;n</h2>
-                <input type="text" class="form-control" placeholder="Nombre de usuario" required autofocus>
-                <input type="password" class="form-control" placeholder="Contrase&ntilde;a" required>
+                <input type="text" id="uName" name="uName" class="form-control" placeholder="Nombre de usuario" required autofocus>
+                <input type="password" id="uPass" name="uPass" class="form-control" placeholder="Contrase&ntilde;a" required>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
             </form>
+            <% if(session.getAttribute("Error") != null && Boolean.valueOf(session.getAttribute("Error").toString())){ %>
+            <div class="alert alert-warning">
+                <p class="lead">El usuario y/o contraseña son incorrectos</p>
+            </div>
+            <% } %>
         </div> <!-- /container -->
         <!-- Bootstrap core JavaScript
         ================================================== -->

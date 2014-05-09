@@ -15,3 +15,14 @@ function consecutivo() {
     }
 
 }
+function sub() {
+    var regreso = true;
+    if (!$('#automatic').is(':checked')) {
+        if (isNaN($('#idSub').val())) {
+            $('#idSub').tooltip({placement: 'right', title: "Deben de ser solo números"});
+            $('#idSub').tooltip('show');
+            regreso = false;
+        }
+    }
+    return regreso;
+}

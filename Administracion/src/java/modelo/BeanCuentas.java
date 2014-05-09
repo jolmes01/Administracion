@@ -88,6 +88,58 @@ public class BeanCuentas {
         }
     }
 
+    public HashMap<Integer, Cuenta> getCuentasSeparadas() {
+        HashMap<Integer, Cuenta> cuentasSeparadas = new HashMap<Integer, Cuenta>();
+        //SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC,idSubCuenta
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT "
+                    + "idCuentaC,idSubCuenta, descripcion, descripcionSub, saldo "
+                    + "FROM cuentas "
+                    + "WHERE idEmpresaC LIKE 1 "
+                    + "ORDER BY idCuentaC,idSubCuenta");
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            while (rs.next()) {
+                //Obtiene los parametros resultantes de la consulta de la vista
+                int id = Integer.parseInt(rs.getString("idCuentaC"));
+                String descripcion = rs.getString("descripcion");
+                String idSub = rs.getString("idSubCuenta");
+                String descripcionSub = rs.getString("descripcionSub");
+                String saldo = rs.getString("saldo");
+                //Verifica que el id de la cuenta no exista ya en la lista
+                if (!cuentasSeparadas.containsKey(id)) {
+                    Cuenta c = new Cuenta();
+                    c.setIdCuenta(id);
+                    c.setDescripcionCuenta(descripcion);
+                    //Si el dato obtenido tiene subcuenta lo agrega a la cuenta como una subdivisión de la misma
+                    if (idSub != null && descripcionSub != null) {
+                        SubCuenta sub = new SubCuenta(Integer.parseInt(idSub), descripcionSub, Double.parseDouble(saldo));
+                        c.setSubCuenta(sub);
+                    } else { //Si no la presenta guarda el valor total del saldo en saldo total
+                        c.setSaldoTotal(Double.valueOf(saldo));
+                    }
+                    cuentasSeparadas.put(id, c);
+                } else { //Si contiene el id la lista entonces solo se encargara de actualizar los valores
+                    Cuenta c = cuentasSeparadas.get(id);
+                    cuentasSeparadas.remove(id);
+                    //Si el dato obtenido tiene subcuenta lo agrega a la cuenta como una subdivisión de la misma
+                    if (idSub != null && descripcionSub != null) {
+                        SubCuenta sub = new SubCuenta(Integer.parseInt(idSub), descripcionSub, Double.parseDouble(saldo));
+                        c.setSubCuenta(sub);
+                    } else { //Si no la presenta guarda el valor total del saldo en saldo total
+                        c.setSaldoTotal(Double.valueOf(saldo));
+                    }
+                    cuentasSeparadas.put(id, c);
+                }
+            }
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cuentasSeparadas;
+    }
+
     public String getSaldo(int idCuenta) {
         String descripcion = "";
         String saldo = "";
@@ -101,9 +153,9 @@ public class BeanCuentas {
                 descripcion = rs.getString("descripcion");
                 saldo = rs.getString("saldo");
                 mensaje = "<div class=\"alert alert-success\">"
-                        + "<p class=\"lead\">El saldo de la cuenta <strong>"+descripcion+"</strong> "
-                        + "es <small>"+df.format(Double.valueOf(saldo))+"</small></p></div>";
-            }else{
+                        + "<p class=\"lead\">El saldo de la cuenta <strong>" + descripcion + "</strong> "
+                        + "es <strong>$" + df.format(Double.valueOf(saldo)) + "</strong></p></div>";
+            } else {
                 mensaje = "<div class=\"alert alert-warning\">"
                         + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
             }
@@ -123,16 +175,16 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("SELECT descripcion,descripcionSub,saldo FROM cuentas "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE "+idSubCuenta+" AND idEmpresaC LIKE 1");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE 1");
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
                 descripSub = rs.getString("descripcionSub");
                 saldo = rs.getString("saldo");
                 mensaje = "<div class=\"alert alert-success\">"
-                        + "<p class=\"lead\">El saldo de la cuenta <strong>"+descripcion+"</strong> con subcuenta <strong>"+descripSub+"</strong> "
-                        + "es <small>"+df.format(Double.valueOf(saldo))+"</small></p></div>";
-            }else{
+                        + "<p class=\"lead\">El saldo de la cuenta <strong>" + descripcion + "</strong> con subcuenta <strong>" + descripSub + "</strong> "
+                        + "es <strong>$" + df.format(Double.valueOf(saldo)) + "</strong></p></div>";
+            } else {
                 mensaje = "<div class=\"alert alert-warning\">"
                         + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
             }

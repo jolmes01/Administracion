@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label for="poliza" class="col-md-2 control-label">No. de Poliza</label>
                     <div class="col-md-6">
-                        <input type="number" id="poliza" name="poliza" />
+                        <input type="number" id="poliza" name="poliza" min="1" required/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -21,19 +21,19 @@
                     <div class="col-md-6">
                         <select id="cuentaP" name="cuentaP" class="form-control">
                             <%
-                            Connection con = new AccesBD().conexion();
-                            PreparedStatement ps = con.prepareStatement("SELECT idCuentaC,idSubCuenta, descripcion, descripcionSub FROM cuentas WHERE idEmpresaC LIKE 1 ORDER BY idCuentaC,idSubCuenta");
-                            ps.execute();
-                            ResultSet rs = ps.getResultSet();
-                            while (rs.next()) {
-                            if (rs.getInt("idSubCuenta") == 0) {
+                            for(Cuenta c : cuentasList){
+                            if(c.getSubcuentas().size() == 0 || c.getSubcuentas() == null){
                             %>
-                            <option value="<%= rs.getString("idcuentaC")%>"><%= rs.getString("idcuentaC") + " - " + rs.getString("descripcion")%></option>
-                            <% } else {%>
-                            <option value="<%= rs.getString("idcuentaC")%>.<%= rs.getString("idSubCuenta")%>"><%= rs.getString("idcuentaC") + "." + rs.getString("idSubCuenta") + " - " + rs.getString("descripcionSub")%></option>
+                            <option value="<%= c.getIdCuenta() %>"><%= c.getIdCuenta() + " - " + c.getDescripcionCuenta() %></option>
+                            <% } else {
+                            for(int i = 0; i < c.getSubcuentas().size(); i++){
+                            if(c.getSubCuenta(i).getIdSubCuenta() != 0){
+                            %>
+                            <option value="<%= c.getIdCuenta() %>.<%= c.getSubCuenta(i).getIdSubCuenta() %>"><%= c.getIdCuenta() + "." + c.getSubCuenta(i).getIdSubCuenta() + " - " + c.getSubCuenta(i).getDescripcion() %></option>
                             <% }
                             }
-                            con.close();
+                            }
+                            }
                             %>
                         </select>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="form-group">
                     <label for="fechaDeMov" class="col-md-2 control-label">Fecha del Movimiento</label>
                     <div class="col-md-6">
-                        <input type="date" class="form-control" id="fechaDeMov" name="fechaDeMov" placeholder="Tu saldo" />
+                        <input type="date" class="form-control" id="fechaDeMov" name="fechaDeMov" required />
                     </div>
                 </div>
                 <div class="form-group">
@@ -52,7 +52,7 @@
                                 <input id="automatic" name="automatic" type="radio" value="cargo" checked/>Cargo
                                 <input id="automatic2" name="automatic" type="radio" value="abono"/>Abono
                             </span>
-                            <input id="tipoCA" name="tipoCA" type="text" class="form-control" placeholder="Monto a registrar">
+                            <input id="tipoCA" name="tipoCA" type="text" class="form-control" placeholder="Monto a registrar" required />
                         </div><!-- /input-group -->
                     </div>
                 </div>

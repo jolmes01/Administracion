@@ -46,35 +46,47 @@
             function consulta()
             {
                 $('#resultadoCuenta').hide();
+                var envio = true;
                 var request = get_XmlHttp();
                 var cuenta = document.getElementById("cuenta").value;
                 var cuentaE = document.getElementById("cuentaEspecifica").value;
-                var params = "cuenta=" + cuenta;
-                if (cuentaE != "") {
-                    params += "&cuentaE=" + cuentaE;
+                $('#cuenta').tooltip('destroy');
+                $('#cuentaEspecifica').tooltip('destroy');
+                if (cuenta == "") {
+                    $('#cuenta').tooltip({placement: 'right', title: "Debes ingresar el número de la cuenta"});
+                    $('#cuenta').tooltip('show');
+                    envio = false;
                 }
-                var parametros = "submit=consultaS" + "&" + params;
-                request.open("POST", "./cuentas", true);
-
-                request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.send(parametros);
-                request.onreadystatechange = function()
-                {
-                    var ex_ajsn = request.responseText;
-                    $('#resultadoCuenta').show();
-                    document.getElementById("contenido").innerHTML = ex_ajsn;
+                if ($('#activar').is(':checked') && (cuentaE == "" || isNaN(cuentaE))) {
+                    $('#cuentaEspecifica').tooltip({placement: 'right', title: "Debes ingresar el número de la cuenta"});
+                    $('#cuentaEspecifica').tooltip('show');
+                    envio = false;
                 }
+                if (envio) {
+                    var params = "cuenta=" + cuenta;
+                    if (cuentaE != "") {
+                        params += "&cuentaE=" + cuentaE;
+                    }
+                    var parametros = "submit=consultaS" + "&" + params;
+                    request.open("POST", "./cuentas", true);
 
+                    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    request.send(parametros);
+                    request.onreadystatechange = function()
+                    {
+                        var ex_ajsn = request.responseText;
+                        $('#resultadoCuenta').show();
+                        document.getElementById("contenido").innerHTML = ex_ajsn;
+                    }
+                }
             }
             $(document).ready(function() {
                 $('#activar').click(function() {
                     if ($(this).prop('checked')) {
                         $('#cuentaEspecifica').attr('disabled', false);
-                        $('#cuentaEspecifica').attr('required', false);
                     }
                     else {
                         $('#cuentaEspecifica').attr('disabled', true);
-                        $('#cuentaEspecifica').attr('required', true);
                     }
                 });
             });
