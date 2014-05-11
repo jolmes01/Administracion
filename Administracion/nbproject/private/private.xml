@@ -5,10 +5,12 @@
         <group>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/estado.jsp</file>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/poliza.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/META-INF/context.xml</file>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/layouts/navbar.html</file>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/controlador/ServletSession.java</file>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/reportes/ServletIntegral.java</file>
             <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/forms/altapoliza.html</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/modelo/ResultadoIntegral.java</file>
         </group>
     </open-files>
 </project-private>
