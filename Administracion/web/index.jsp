@@ -14,40 +14,35 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <!-- <link rel="shortcut icon" href="../../assets/ico/favicon.ico">  -->
-
         <title>SisCon - Login</title>
-
         <!-- Bootstrap core CSS -->
         <link href="dist/css/bootstrap.min.css" rel="stylesheet">
-
         <!-- Custom styles for this template -->
         <link href="dist/css/signin.css" rel="stylesheet">
-
-        <!-- Just for debugging purposes. Don't actually copy this line! -->
-        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
     </head>
     <body>
         <div class="container">
-            <form class="form-signin" action="login" onSubmit="return valida()" role="form">
+            <form class="form-signin" action="login" method="post" onSubmit="return valida()" role="form">
                 <h2 class="form-signin-heading">Inicia sesi&oacute;n</h2>
                 <input type="text" id="uName" name="uName" class="form-control" placeholder="Nombre de usuario" required autofocus>
                 <input type="password" id="uPass" name="uPass" class="form-control" placeholder="Contrase&ntilde;a" required>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
+                <button class="btn btn-lg btn-primary btn-block" type="button">Registrar</button>
             </form>
-            <% if(session.getAttribute("Error") != null && Boolean.valueOf(session.getAttribute("Error").toString())){ %>
+            <% if (session.getAttribute("Error") != null && Boolean.valueOf(session.getAttribute("Error").toString())) { 
+                session.removeAttribute("Error");
+            %>
             <div class="alert alert-warning">
                 <p class="lead">El usuario y/o contraseña son incorrectos</p>
             </div>
-            <% } %>
+            <% }%>
         </div> <!-- /container -->
         <!-- Bootstrap core JavaScript
         ================================================== -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="dist/js/bootstrap.min.js"></script>
+        <script src="dist/js/docs.min.js"></script>
+        <script src="dist/js/login.js"></script>
         <!-- Placed at the end of the document so the pages load faster -->
     </body>
 </html>

@@ -45,10 +45,11 @@ public class ServletControlador extends HttpServlet {
         BeanCuentas cuentas = (BeanCuentas) session.getAttribute("cuentasE");
         //Si el bean no existe en la sesion se crea uno y se agrega a la misma
         if (cuentas == null) {
-            System.out.println("CREADO BEAN CUENTAS");
             cuentas = new BeanCuentas();
             session.setAttribute("cuentasE", cuentas);
         }
+        
+        cuentas.setIdEmpresa(Integer.parseInt(session.getAttribute("Empresa").toString()));
 
         if (submit != null) {
             if ("cuentaG".equals(submit)) {

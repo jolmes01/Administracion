@@ -12,6 +12,10 @@
         <servlet-name>ServletSession</servlet-name>
         <servlet-class>controlador.ServletSession</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletIntegral</servlet-name>
+        <servlet-class>reportes.ServletIntegral</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletControlador</servlet-name>
         <url-pattern>/aplicacion/cuentas</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>ServletSession</servlet-name>
         <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletIntegral</servlet-name>
+        <url-pattern>/resultadoIntegral</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

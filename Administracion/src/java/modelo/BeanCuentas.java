@@ -28,9 +28,18 @@ import java.util.logging.Logger;
 public class BeanCuentas {
 
     private HashMap<Integer, Cuenta> cuenta = new HashMap<Integer, Cuenta>();
+    private int idEmpresa = 0;
 
     public HashMap<Integer, Cuenta> getCuenta() {
         return cuenta;
+    }
+
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public int getTotalSubCuentas(int idCuenta) {
@@ -46,7 +55,7 @@ public class BeanCuentas {
         try {
             cuenta.clear();
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM cuentas WHERE idEmpresaC LIKE 1");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM cuentas WHERE idEmpresaC LIKE "+getIdEmpresa());
             ps.execute();
             ResultSet rs = ps.getResultSet();
             while (rs.next()) {
@@ -96,7 +105,7 @@ public class BeanCuentas {
             PreparedStatement ps = con.prepareStatement("SELECT "
                     + "idCuentaC,idSubCuenta, descripcion, descripcionSub, saldo "
                     + "FROM cuentas "
-                    + "WHERE idEmpresaC LIKE 1 "
+                    + "WHERE idEmpresaC LIKE "+getIdEmpresa()+" "
                     + "ORDER BY idCuentaC,idSubCuenta");
             ps.execute();
             ResultSet rs = ps.getResultSet();
@@ -147,7 +156,7 @@ public class BeanCuentas {
         DecimalFormat df = new DecimalFormat("###,###,###,###.00");
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idCuentaC LIKE " + idCuenta + " AND idEmpresaC LIKE 1");
+            PreparedStatement ps = con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idCuentaC LIKE " + idCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
@@ -175,7 +184,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("SELECT descripcion,descripcionSub,saldo FROM cuentas "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE 1");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
@@ -200,7 +209,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
-                    + "VALUES(1," + idCuenta + ",0,null," + saldo + ")");
+                    + "VALUES("+getIdEmpresa()+"," + idCuenta + ",0,null," + saldo + ")");
             boolean result = ps.execute();
             if (!result) {
                 ps.execute("SELECT descripcion FROM cuenta WHERE idcuenta = " + idCuenta);
@@ -227,7 +236,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
-                    + "VALUES(1," + idCuenta + "," + idSubD + ",'" + descripcion + "'," + saldo + ")");
+                    + "VALUES("+getIdEmpresa()+"," + idCuenta + "," + idSubD + ",'" + descripcion + "'," + saldo + ")");
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -251,7 +260,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE 1");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -273,7 +282,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE 0 AND idEmpresaC LIKE 1 AND saldo LIKE 0");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE 0 AND idEmpresaC LIKE "+getIdEmpresa()+" AND saldo LIKE 0");
             boolean result = ps.execute();
             con.close();
             if (!result) {

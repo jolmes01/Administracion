@@ -44,6 +44,8 @@ public class ServletPoliza extends HttpServlet {
             poliza = new BeanPoliza();
             session.setAttribute("polizaE", poliza);
         }
+        
+        poliza.setIdEmpresa(Integer.parseInt(session.getAttribute("Empresa").toString()));
 
         switch (command) {
             case 0:
@@ -58,17 +60,6 @@ public class ServletPoliza extends HttpServlet {
             case 3:
                 submitPoliza(request, response, out, poliza);
                 break;
-            case 4:
-                //vaciar(request, response, out, producto);
-                break;
-            case 5:
-                //session.setAttribute("bean", producto);
-                //grabar(request, response, out, producto, session.getAttribute("usuario").toString());
-                break;
-            case 6:
-                //salir(request, response, out, producto);
-                break;
-
         }
     }
 

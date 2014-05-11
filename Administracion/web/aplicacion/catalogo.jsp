@@ -21,7 +21,7 @@
 <jsp:useBean id="cuentasE" scope="session" class="modelo.BeanCuentas" />
 <html lang="es">
     <head>
-        <title>SisCon - Usuario</title>
+        <title>SisCon - <%= session.getAttribute("Usuario") %></title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -59,7 +59,7 @@
                 <div class="row main-row">
                     <div class="12u">
                         <section>
-                            <h2>Cátalogo de cuentas de: </h2>
+                            <h2>Cátalogo de cuentas de <small><%= session.getAttribute("nEmpresa") %></small></h2>
                             <%@include file="../forms/cuentasControl.html" %>
                             <ul class="nav nav-pills">
                                 <li class="active"><a href="#Activos" data-toggle="tab">Activos</a></li>

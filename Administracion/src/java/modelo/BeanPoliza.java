@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 public class BeanPoliza {
 
     private HashMap<Integer, Poliza> polizas = new HashMap<Integer, Poliza>();
+    private int idEmpresa = 0;
 
     public HashMap<Integer, Poliza> getPolizas() {
         return polizas;
@@ -30,6 +31,14 @@ public class BeanPoliza {
 
     public void setPolizas(HashMap<Integer, Poliza> polizas) {
         this.polizas = polizas;
+    }
+
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public String addPoliza(String polizaId, String cuentaP, String fechaMov, String tipo, String pago) {
@@ -113,9 +122,9 @@ public class BeanPoliza {
             for (int i = 0; i < pCount.getIdCuenta().size(); i++) {
                 retorno += pCount.getPartidaDoble() ? "<tr class=\"alert alert-success\">" : "<tr class=\"alert alert-danger\">";
                 retorno += " <th>" + pCount.getPoliza() + "</th>";
-                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>":" <th>" + pCount.getIdCuentaByIndex(i)+ "."+ pCount.getIdSubCuentaByIndex(i) +"</th>";
-                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>":
-                        "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i))+ "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>" : " <th>" + pCount.getIdCuentaByIndex(i) + "." + pCount.getIdSubCuentaByIndex(i) + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>"
+                        : "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
                 retorno += "<th>" + pCount.getFechaByIndex(i) + "</th>";
                 retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
                 retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
@@ -163,9 +172,9 @@ public class BeanPoliza {
             for (int i = 0; i < pCount.getIdCuenta().size(); i++) {
                 retorno += pCount.getPartidaDoble() ? "<tr class=\"alert alert-success\">" : "<tr class=\"alert alert-danger\">";
                 retorno += " <th>" + pCount.getPoliza() + "</th>";
-                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>":" <th>" + pCount.getIdCuentaByIndex(i)+ "."+ pCount.getIdSubCuentaByIndex(i) +"</th>";
-                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>":
-                        "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i))+ "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + pCount.getIdCuentaByIndex(i) + "</th>" : " <th>" + pCount.getIdCuentaByIndex(i) + "." + pCount.getIdSubCuentaByIndex(i) + "</th>";
+                retorno += (pCount.getIdSubCuentaByIndex(i) == 0) ? "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "</th>"
+                        : "<th>" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i)) + "-" + getDescripcionCuenta(pCount.getIdCuentaByIndex(i), pCount.getIdSubCuentaByIndex(i)) + "</th>";
                 retorno += "<th>" + pCount.getFechaByIndex(i) + "</th>";
                 retorno += (pCount.getCargoByIndex(i) > 0) ? "<th>" + pCount.getCargoByIndex(i) + "</th>" : "<th></th>";
                 retorno += (pCount.getAbonoByIndex(i) > 0) ? "<th>" + pCount.getAbonoByIndex(i) + "</th>" : "<th></th>";
@@ -191,12 +200,13 @@ public class BeanPoliza {
         }
         return descripcion;
     }
-    
+
     private String getDescripcionCuenta(int idCuentaByIndex, int idSub) {
         String descripcion = "";
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT descripcionSub FROM cuentas WHERE idcuentaC LIKE " + idCuentaByIndex+" AND idSubCuenta LIKE "+idSub);
+            PreparedStatement ps = con.prepareStatement("SELECT descripcionSub FROM cuentas "
+                    + "WHERE idcuentaC LIKE " + idCuentaByIndex + " AND idSubCuenta LIKE " + idSub + " AND idEmpresaC LIKE "+getIdEmpresa());
             ps.execute();
             ResultSet rs = ps.getResultSet();
             if (rs.next()) {
@@ -212,7 +222,8 @@ public class BeanPoliza {
         int valorDeSobrePaso = 0;
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM cuenta_empresa WHERE idEmpresaC LIKE 1 AND idCuentaC LIKE ? AND idSubCuenta LIKE ? AND saldo >= ");
+            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM cuenta_empresa WHERE idEmpresaC LIKE ? AND idCuentaC LIKE ? AND idSubCuenta LIKE ? AND saldo >= ");
+            ps.setInt(1, getIdEmpresa());
             ps.execute();
             ResultSet rs = ps.getResultSet();
             if (rs.next()) {
@@ -241,13 +252,14 @@ public class BeanPoliza {
                 Poliza pol = it.next().getValue();
                 int idPoliza = pol.getPoliza();
                 for (int i = 0; i < pol.getIdCuenta().size(); i++) {
-                    PreparedStatement ps = con.prepareStatement("INSERT INTO poliza VALUES(1,?,?,?,?,?,?)");
-                    ps.setInt(1, pol.getIdCuentaByIndex(i));
-                    ps.setInt(2, pol.getIdSubCuentaByIndex(i));
-                    ps.setInt(3, idPoliza);
-                    ps.setString(4, pol.getFechaByIndex(i));
-                    ps.setInt(5, pol.getCargoByIndex(i));
-                    ps.setInt(6, pol.getAbonoByIndex(i));
+                    PreparedStatement ps = con.prepareStatement("INSERT INTO poliza VALUES(?,?,?,?,?,?,?)");
+                    ps.setInt(1, getIdEmpresa());
+                    ps.setInt(2, pol.getIdCuentaByIndex(i));
+                    ps.setInt(3, pol.getIdSubCuentaByIndex(i));
+                    ps.setInt(4, idPoliza);
+                    ps.setString(5, pol.getFechaByIndex(i));
+                    ps.setInt(6, pol.getCargoByIndex(i));
+                    ps.setInt(7, pol.getAbonoByIndex(i));
                     Connection cambio = new AccesBD().conexion();
                     String operador = "";
                     String subCuenta = " AND idSubCuenta = 0";
@@ -274,7 +286,7 @@ public class BeanPoliza {
                     }
                     String validaMayor = (operador == "-") ? "saldo >= " + saldo + " AND" : "";
                     String sql = "UPDATE cuenta_empresa "
-                            + "SET saldo = (saldo" + operador + "" + saldo + ") WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + "" + subCuenta + " AND idEmpresaC LIKE 1";
+                            + "SET saldo = (saldo" + operador + "" + saldo + ") WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + "" + subCuenta + " AND idEmpresaC LIKE "+getIdEmpresa();
                     System.out.println(sql);
                     PreparedStatement psc = cambio.prepareStatement(sql);
                     valorFirtsQuery = psc.executeUpdate();
@@ -282,7 +294,7 @@ public class BeanPoliza {
                         sql = "UPDATE cuenta_empresa "
                                 + "SET saldo = (saldo" + operador + "" + saldo + ") "
                                 + "WHERE " + validaMayor + " idCuentaC = " + pol.getIdCuentaByIndex(i) + " AND idSubCuenta = 0"
-                                + " AND idEmpresaC LIKE 1";
+                                + " AND idEmpresaC LIKE "+getIdEmpresa();
                         System.out.println(sql);
                         valorFirtsQuery = psc.executeUpdate(sql);
                     }

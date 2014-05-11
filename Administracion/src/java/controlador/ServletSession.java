@@ -43,7 +43,7 @@ public class ServletSession extends HttpServlet {
         String pass = request.getParameter("uPass");
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT idTipo,idEmp,NomPila,ApPaterno FROM usuario"
+            PreparedStatement ps = con.prepareStatement("SELECT idTipo,idEmp,empresa.nombreEmpresa,NomPila,ApPaterno FROM usuario,empresa"
                     + " WHERE Usuario LIKE ? AND Contrasena LIKE ?");
             ps.setString(1, usuario);
             ps.setString(2, pass);
@@ -53,6 +53,7 @@ public class ServletSession extends HttpServlet {
                 session.setAttribute("Sesion", usuario);
                 session.setAttribute("Tipo", rs.getString("idTipo"));
                 session.setAttribute("Empresa", rs.getString("idEmp"));
+                session.setAttribute("nEmpresa", rs.getString("nombreEmpresa"));
                 session.setAttribute("Usuario", rs.getString("NomPila")+" "+rs.getString("ApPaterno"));
                 response.sendRedirect("./aplicacion/principal.jsp");
             }else{

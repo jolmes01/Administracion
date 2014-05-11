@@ -8,7 +8,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>SisCon - Usuario</title>
+        <title>SisCon - <%= session.getAttribute("Usuario") %></title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="12u">
                         <div id="banner">
-                            <h2>Bienvenido a SisCon :¬D!</h2>
+                            <h2>Bienvenido a SisCon <%= session.getAttribute("Usuario") %> :¬D!</h2>
                             <span>Donde la administración financiera de tu empresa nunca fue tan fácil</span>
                         </div>
                     </div>

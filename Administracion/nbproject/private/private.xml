@@ -3,9 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Jorge/Documents/GitHub/Administracion/Administracion/web/aplicacion/layouts/navbar.html</file>
-            <file>file:/C:/Users/Jorge/Documents/GitHub/Administracion/Administracion/web/index.jsp</file>
-            <file>file:/C:/Users/Jorge/Documents/GitHub/Administracion/Administracion/web/aplicacion/principal.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/poliza.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/catalogo.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/saldo.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/forms/cuentasControl.html</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/dist/js/login.js</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/modelo/BeanPoliza.java</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/aplicacion/layouts/navbar.html</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/dist/js/cuentas.js</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/index.jsp</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/controlador/ServletSession.java</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/src/java/modelo/BeanCuentas.java</file>
+            <file>file:/C:/Users/JL/Documents/GitHub/Administracion/Administracion/web/forms/activos.html</file>
         </group>
     </open-files>
 </project-private>
