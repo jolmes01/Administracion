@@ -5,9 +5,6 @@
  */
 package reportes;
 
-import java.io.*;
-import java.net.*;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -15,25 +12,23 @@ import java.io.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
+import modelo.ResultadoIntegral;
 
 /**
  *
  * @author JL
  */
 public class ServletIntegral extends HttpServlet {
-    
-    private final String descripciones[] = 
-    {"Ventas netas","Costo de ventas", "Utilidad o pérdida bruta",
-    "Gastos generales","Gastos de venta","Gastos de adminisración",
-    "Otros ingresos y gastos netos","Utilidad de operación (EBIT)",
-    "Resultado Integral de financiemiento (RIF)","Intereses devengados",
-    "Fluctuación cambiaria","Cambios en el valor razonable de activos y pasivos financieros",
-    "Utilidad o pérdida antes de impuestos a la utilidad","Impuestos a la utilidad",
-    "Utilidad de operaciones continuas","Operaciones discontinuadas",
-    "Utilidad neta","Otros resultados integrales (ORI)","Resultado integral"};
+
+    private final String descripciones[]
+            = {"Ventas netas", "Costo de ventas", "Utilidad o pérdida bruta",
+                "Gastos generales", "Gastos de venta", "Gastos de adminisración",
+                "Otros ingresos y gastos netos", "Utilidad de operación (EBIT)",
+                "Resultado Integral de financiemiento (RIF)", "Intereses devengados",
+                "Fluctuación cambiaria", "Cambios en el valor razonable de activos y pasivos financieros",
+                "Utilidad o pérdida antes de impuestos a la utilidad", "Impuestos a la utilidad",
+                "Utilidad de operaciones continuas", "Operaciones discontinuadas",
+                "Utilidad neta", "Otros resultados integrales (ORI)", "Resultado integral"};
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,7 +40,7 @@ public class ServletIntegral extends HttpServlet {
         response.setContentType("application/pdf");
         //Para descargar el PDF
         /*response.setHeader("Content-Disposition",
-            "attachment; filename=\"ResultadoIntegral.pdf\"");*/
+         "attachment; filename=\"ResultadoIntegral.pdf\"");*/
         // step 1: creation of a document-object
         try {
             Document document = new Document(PageSize.LETTER);
@@ -66,16 +61,22 @@ public class ServletIntegral extends HttpServlet {
             title = new Paragraph("Cifras en miles de pesos");
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
-            for(int i = 0; i < 2; i++){
+            for (int i = 0; i < 2; i++) {
                 document.add(new Paragraph(" "));
             }
             PdfPTable table = new PdfPTable(2);
-            for(String item : descripciones){
-                PdfPCell dato = new PdfPCell(new Phrase(item));
+            //Obtenemos los datos de la clase ResultadoIntegral
+            ResultadoIntegral r = new ResultadoIntegral();
+            r.calculaResultado(Integer.parseInt(session.getAttribute("Empresa").toString()));
+            /*ventas - costo- utilidad - gastosV - gastosA - gastosI - otrosIngresos - otrosGastos - EBIT 
+             interesesDev - fluctuacion - cambiosValor - antesImpuestos - impuestosUtilidad - operacionesCon
+             operacionesDis - utilneta - ORI - resultadoIntegral */
+            for (int i = 0; i < r.getSaldos().size(); i++) {
+                PdfPCell dato = new PdfPCell(new Phrase(descripciones[i]));
                 dato.setBorder(Rectangle.NO_BORDER);
                 dato.setHorizontalAlignment(Element.ALIGN_LEFT);
                 table.addCell(dato);
-                dato.setPhrase(new Phrase("-null-"));
+                dato.setPhrase(new Phrase("" + r.getValores().get(i)));
                 dato.setBorder(Rectangle.NO_BORDER);
                 dato.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table.addCell(dato);
