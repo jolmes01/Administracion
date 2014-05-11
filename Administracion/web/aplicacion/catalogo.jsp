@@ -60,7 +60,9 @@
                     <div class="12u">
                         <section>
                             <h2>Cátalogo de cuentas de <small><%= session.getAttribute("nEmpresa") %></small></h2>
+                            <% if(Integer.parseInt(session.getAttribute("Tipo").toString()) == 1){ %>
                             <%@include file="../forms/cuentasControl.html" %>
+                            <% } %>
                             <ul class="nav nav-pills">
                                 <li class="active"><a href="#Activos" data-toggle="tab">Activos</a></li>
                                 <li><a href="#Pasivos" data-toggle="tab">Pasivos</a></li>
