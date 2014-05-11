@@ -42,12 +42,13 @@
         <div class="row">
             <div class="12u">
                 <header id="header">
-                    <h1><a href="principal.jsp" id="logo">SisCon - <%= session.getAttribute("Usuario") %></a></h1>
+                    <h1><a href="principal.jsp" id="logo">SisCon - <%= session.getAttribute("Usuario").toString().substring(0, session.getAttribute("Usuario").toString().indexOf(" ")) %></a></h1>
                     <nav id="nav">
                         <a href="./cuentas" id="catalog">Catálogo de cuentas</a>
                         <a href="poliza.jsp" id="poliz">Captura de polizas</a>
                         <a href="saldo.jsp" id="saldo">Saldos</a>
                         <a href="estado.jsp" id="state">Generar Estados</a>
+                        <a href="../Logout" id="state">Cerrar Sesión</a>
                     </nav>
                 </header>
             </div>
