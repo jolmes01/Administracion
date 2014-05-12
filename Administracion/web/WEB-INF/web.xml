@@ -20,6 +20,10 @@
         <servlet-name>ServletLogout</servlet-name>
         <servlet-class>controlador.ServletLogout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletBalance</servlet-name>
+        <servlet-class>reportes.ServletBalance</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletControlador</servlet-name>
         <url-pattern>/aplicacion/cuentas</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>ServletLogout</servlet-name>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletBalance</servlet-name>
+        <url-pattern>/ServletBalance</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
