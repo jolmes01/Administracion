@@ -95,17 +95,19 @@ public class BalanceGeneral {
     
     private ArrayList<Double> val = new ArrayList<Double>();
     private ArrayList<String> descripcion = new ArrayList<String>();
+    private ArrayList<Integer> id = new ArrayList<Integer>();
 
     public BalanceGeneral() {
     }
     
     public void calcula(int idEmpresa) throws SQLException{
         Connection con= new AccesBD().conexion();
-        PreparedStatement ps= con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idEmpresaC LIKE ? AND idCuentaC > 5000 AND idSubCuenta LIKE 0 ORDER BY idCuentaC");
+        PreparedStatement ps= con.prepareStatement("SELECT idCuentaC,descripcion,saldo FROM cuentas WHERE idEmpresaC LIKE ? AND idSubCuenta LIKE 0 ORDER BY idCuentaC");
         ps.setInt(1, idEmpresa);
         ResultSet rs= ps.executeQuery();
         while(rs.next())
         {
+            id.add(rs.getInt("idCuentaC"));
             descripcion.add(rs.getString("descripcion"));
             val.add(rs.getDouble("saldo"));
         }
@@ -200,8 +202,8 @@ public class BalanceGeneral {
             saldos.add(this.itrasladado);
             this.iptrasladar = this.val.get(descripcion.indexOf("IVA por trasladar"));
             saldos.add(this.iptrasladar);
-            //this.itrasladado = this.val.get(descripcion.indexOf("Intereses cobrados por anticipado"));
-            //saldos.add(this.itrasladado);
+            //this.intcpanticipadocp = this.val.get(id.indexOf(2107));
+            //saldos.add(this.intcpanticipadocp);
             this.impppagar = this.val.get(descripcion.indexOf("Impuestos por pagar"));
             saldos.add(this.impppagar);
             this.rentcpanticipado = this.val.get(descripcion.indexOf("Rentas cobradas por anticipado"));
