@@ -34,6 +34,14 @@
                 obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
             }
         </script>
+        <script language="javascript" type="text/javascript">
+            function BalanceGeneral(url){
+                window.open(url)
+            }
+            function resizeIframe(obj) {
+                obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+            }
+        </script>
     </head>
     <body>
         <!--    Navbar (Menú barra azul)     -->
@@ -54,7 +62,7 @@
                                         <p class="lead"><strong>¿Necesitas el reporte de tu empresa?</strong> No te preocupes solo da click al botón
                                             del reporte que quieres y se abrira una pestaña con tu reporte generado</p>
                                         <button class="btn btn-primary" onclick="ResultadoIntegral('../resultadoIntegral')">Reporte de Resultado Integral</button>
-                                        <button class="btn btn-info">Estado de Situación Financiera</button>
+                                        <button class="btn btn-info" onclick="BalanceGeneral('../balanceGeneral')">Estado de Situación Financiera</button>
                                     </div>
                                 </div>
                             </div>

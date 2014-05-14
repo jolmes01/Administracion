@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class BalanceGeneral {
     private ArrayList<Double> saldos = new ArrayList<Double>();
     private ArrayList<Double> sumas = new ArrayList<Double>();
-    private final int lonDescriptores = 68;
+    private final int lonDescriptores = 70;
     
     private double activo=0.0;
     private double circulante=0.0;
@@ -60,7 +60,7 @@ public class BalanceGeneral {
     private double itrasladado = 0.0;
     private double iptrasladar = 0.0;
     private double impppagar = 0.0;
-   // private double intcpanticipadocp = 0.0;
+    private double intcpanticipadocp = 0.0;
     private double rentcpanticipado = 0.0;
     private double docpplargo = 0.0;
     private double ahipotecarios = 0.0;
@@ -72,7 +72,7 @@ public class BalanceGeneral {
     private double depequipo = 0.0;
     private double deptransporte = 0.0;
     private double depcomputo = 0.0;
-    //private double intcpanticipadolp = 0.0;
+    private double intcpanticipadolp = 0.0;
     private double creditofrac = 0.0;
     private double aportaciones = 0.0;
     private double donaciones = 0.0;
@@ -202,8 +202,8 @@ public class BalanceGeneral {
             saldos.add(this.itrasladado);
             this.iptrasladar = this.val.get(descripcion.indexOf("IVA por trasladar"));
             saldos.add(this.iptrasladar);
-            //this.intcpanticipadocp = this.val.get(id.indexOf(2107));
-            //saldos.add(this.intcpanticipadocp);
+            this.intcpanticipadocp = this.val.get(id.indexOf(2107));
+            saldos.add(this.intcpanticipadocp);
             this.impppagar = this.val.get(descripcion.indexOf("Impuestos por pagar"));
             saldos.add(this.impppagar);
             this.rentcpanticipado = this.val.get(descripcion.indexOf("Rentas cobradas por anticipado"));
@@ -220,6 +220,8 @@ public class BalanceGeneral {
             saldos.add(this.ahipotecarios);
             this.creditofrac = this.val.get(descripcion.indexOf("Crédito refraccionario"));
             saldos.add(this.creditofrac);
+            this.intcpanticipadolp = this.val.get(id.indexOf(2204));
+            saldos.add(this.intcpanticipadolp);
             this.sumaplp=this.docpplargo+this.ahipotecarios+this.creditofrac;
             sumas.add(this.sumaplp);
             this.circulante=0.0;
@@ -257,7 +259,9 @@ public class BalanceGeneral {
             
         }
         else{
+            saldos.add(this.activo);
             saldos.add(this.caja);
+            saldos.add(this.circulante);
             saldos.add(this.bancos);
             saldos.add(this.inversiones);
             saldos.add(this.clientes);
@@ -271,6 +275,8 @@ public class BalanceGeneral {
             saldos.add(this.intppanticipado);
             saldos.add(this.papyutilies);
             saldos.add(this.propypubli);
+            sumas.add(this.sumactivoc);
+            saldos.add(this.nocirculante);
             saldos.add(this.terrenos);
             saldos.add(this.edificio);
             saldos.add(this.depedificio);
@@ -286,26 +292,43 @@ public class BalanceGeneral {
             saldos.add(this.depgarantia);
             saldos.add(this.gdeorg);
             saldos.add(this.gdeins);
+            sumas.add(this.sumactivonc);
+            saldos.add(this.sumarac);
+            sumas.add(this.sumactivo);
+            saldos.add(this.pasivo);
+            saldos.add(this.pcorto);
             saldos.add(this.proveedores);
             saldos.add(this.acreedores);
             saldos.add(this.dppagar);
             saldos.add(this.itrasladado);
             saldos.add(this.iptrasladar);
+            saldos.add(this.intcpanticipadocp);
             saldos.add(this.impppagar);
             saldos.add(this.rentcpanticipado);
             saldos.add(this.ptu);
+            sumas.add(this.sumacp);
+            saldos.add(this.plargo);
             saldos.add(this.docpplargo);
             saldos.add(this.ahipotecarios);
             saldos.add(this.creditofrac);
+            saldos.add(this.intcpanticipadolp);
+            sumas.add(this.sumaplp);
+            saldos.add(this.circulante);
+            saldos.add(this.contable);
             saldos.add(this.capitalsocial);
             saldos.add(this.aportaciones);
             saldos.add(this.donaciones);
             saldos.add(this.primaenventa);
+            sumas.add(this.sumacc);
+            saldos.add(this.contribuido);
             saldos.add(this.utanteriores);
             saldos.add(this.panteriores);
             saldos.add(this.reservalegar);
             saldos.add(this.utejercicio);
             saldos.add(this.pejercicio);
+            sumas.add(this.sumacg);
+            saldos.add(this.sumarpac);
+            sumas.add(this.sumacp);
         }
     }
 
@@ -685,6 +708,211 @@ public class BalanceGeneral {
         this.utejercicio = utejercicio;
     }
 
+    public double getActivo() {
+        return activo;
+    }
+
+    public void setActivo(double activo) {
+        this.activo = activo;
+    }
+
+    public double getCirculante() {
+        return circulante;
+    }
+
+    public void setCirculante(double circulante) {
+        this.circulante = circulante;
+    }
+
+    public double getContable() {
+        return contable;
+    }
+
+    public void setContable(double contable) {
+        this.contable = contable;
+    }
+
+    public double getContribuido() {
+        return contribuido;
+    }
+
+    public void setContribuido(double contribuido) {
+        this.contribuido = contribuido;
+    }
+
+    public double getGanado() {
+        return ganado;
+    }
+
+    public void setGanado(double ganado) {
+        this.ganado = ganado;
+    }
+
+    public double getIntcpanticipadocp() {
+        return intcpanticipadocp;
+    }
+
+    public void setIntcpanticipadocp(double intcpanticipadocp) {
+        this.intcpanticipadocp = intcpanticipadocp;
+    }
+
+    public double getIntcpanticipadolp() {
+        return intcpanticipadolp;
+    }
+
+    public void setIntcpanticipadolp(double intcpanticipadolp) {
+        this.intcpanticipadolp = intcpanticipadolp;
+    }
+
+    public int getLonDescriptores() {
+        return lonDescriptores;
+    }
+
+    public double getNocirculante() {
+        return nocirculante;
+    }
+    
+    
+    public void setNocirculante(double nocirculante) {
+        this.nocirculante = nocirculante;
+    }
+
+    public double getPanteriores() {
+        return panteriores;
+    }
+
+    public void setPanteriores(double panteriores) {
+        this.panteriores = panteriores;
+    }
+
+    public double getPasivo() {
+        return pasivo;
+    }
+
+    public void setPasivo(double pasivo) {
+        this.pasivo = pasivo;
+    }
+
+    public double getPcorto() {
+        return pcorto;
+    }
+
+    public void setPcorto(double pcorto) {
+        this.pcorto = pcorto;
+    }
+
+    public double getPejercicio() {
+        return pejercicio;
+    }
+
+    public void setPejercicio(double pejercicio) {
+        this.pejercicio = pejercicio;
+    }
+
+    public double getPlargo() {
+        return plargo;
+    }
+
+    public void setPlargo(double plargo) {
+        this.plargo = plargo;
+    }
+
+    public double getSumacc() {
+        return sumacc;
+    }
+
+    public void setSumacc(double sumacc) {
+        this.sumacc = sumacc;
+    }
+
+    public double getSumacg() {
+        return sumacg;
+    }
+
+    public void setSumacg(double sumacg) {
+        this.sumacg = sumacg;
+    }
+
+    public double getSumacp() {
+        return sumacp;
+    }
+
+    public void setSumacp(double sumacp) {
+        this.sumacp = sumacp;
+    }
+
+    public double getSumactivo() {
+        return sumactivo;
+    }
+
+    public void setSumactivo(double sumactivo) {
+        this.sumactivo = sumactivo;
+    }
+
+    public double getSumactivoc() {
+        return sumactivoc;
+    }
+
+    public void setSumactivoc(double sumactivoc) {
+        this.sumactivoc = sumactivoc;
+    }
+
+    public double getSumactivonc() {
+        return sumactivonc;
+    }
+
+    public void setSumactivonc(double sumactivonc) {
+        this.sumactivonc = sumactivonc;
+    }
+
+    public double getSumapcp() {
+        return sumapcp;
+    }
+
+    public void setSumapcp(double sumapcp) {
+        this.sumapcp = sumapcp;
+    }
+
+    public double getSumaplp() {
+        return sumaplp;
+    }
+
+    public void setSumaplp(double sumaplp) {
+        this.sumaplp = sumaplp;
+    }
+
+    public double getSumarac() {
+        return sumarac;
+    }
+
+    public void setSumarac(double sumarac) {
+        this.sumarac = sumarac;
+    }
+
+    public double getSumarpac() {
+        return sumarpac;
+    }
+
+    public void setSumarpac(double sumarpac) {
+        this.sumarpac = sumarpac;
+    }
+
+    public ArrayList<Double> getSumas() {
+        return sumas;
+    }
+
+    public void setSumas(ArrayList<Double> sumas) {
+        this.sumas = sumas;
+    }
+    
+    public ArrayList<Integer> getId() {
+        return id;
+    }
+
+    public void setId(ArrayList<Integer> id) {
+        this.id = id;
+    }
+    
     public ArrayList<Double> getSaldos() {
         return saldos;
     }

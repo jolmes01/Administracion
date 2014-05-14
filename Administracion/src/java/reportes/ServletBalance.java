@@ -32,8 +32,8 @@ public class ServletBalance extends HttpServlet {
               "Depreciación acumulada de equipo de cómputo","Crédito mercantil","Patentes",
               "Marcas","Depósitos en garantía","Gastos de organización","Gastos de instalación","SUMA ACTIVO",
               "Pasivo","A corto plazo","Proveedores","Acreedores diversos","Documentos por pagar","IVA trasladado",
-              "IVA por trasladar","Impuestos por pagar","Rentas cobradas por anticipado","PTU por pagar","A largo plazo",
-              "Documentos por pagar a largo plazo","Acreedores hipotecarios","Crédito refraccionario",
+              "IVA por trasladar","Impuestos por pagar","Intereses cobrados por anticipado","Rentas cobradas por anticipado a corto plazo","PTU por pagar","A largo plazo",
+              "Documentos por pagar a largo plazo","Acreedores hipotecarios","Crédito refraccionario","Intereses cobrados por anticipado a largo plazo",
               "Capital contable","Capital contribuido","Capital Social","Aportaciones para futuros aumentos de capital","Donaciones",
               "Prima en venta de acciones","Capital ganado","Utilidades de ejercicios anteriores","Pérdida de ejercicios anteiores","Reserva legal",
               "Utilidad del ejercicio","Pérdida del ejercicio","SUMA PASIVO MÁS CAPITAL CONTABLE"};
@@ -75,13 +75,104 @@ public class ServletBalance extends HttpServlet {
             for (int i = 0; i < 2; i++) {
                 document.add(new Paragraph(" "));
             }
-            PdfPTable table=new PdfPTable(3);
+            PdfPTable table=new PdfPTable(1);
             //Obtenemos los datos de la clase BalanceGeneral
             BalanceGeneral b=new BalanceGeneral();
             b.calcula(Integer.parseInt(session.getAttribute("Empresa").toString()));
             for(int i=0; i<b.getSaldos().size();i++)
             {
+                PdfPCell dato = new PdfPCell();
+                if(i==0 || i==32 || i==33 || i==49 || i==61)
+                {
+                    Chunk ch= new Chunk(descripciones[i]);
+                    ch.setFont(BOLD_Tot);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_LEFT);
+                }
+                else if(i==1 || i==16 || i==34 || i==44 || i==50 || i==55)
+                {
+                    Chunk ch= new Chunk(descripciones[i],new Font(FontFamily.TIMES_ROMAN,12,Font.UNDERLINE));
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_LEFT);
+                }
+                else
+                {
+                    Chunk ch=new Chunk(descripciones[i]);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                }
+                dato.setBorder(Rectangle.NO_BORDER);
+                table.addCell(dato);
+                
+                if(i==0 || i==1 || i==16 || i ==32 || i==33 || i==34 || i==44 || i==49 || i==50 || i==55 || i==61)
+                {
+                    Chunk ch=new Chunk();
+                    String valor="";
+                    ch.append(valor);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                }
+                else if(b.getVal().size()>0)
+                {
+                    Chunk ch=new Chunk();
+                    if(b.getSaldos().get(i)<0)
+                    {
+                        String valor="("+(b.getSaldos().get(i)*(-1))+")";
+                        ch.append(valor);
+                        ch.setFont(NORMAL_Negative);
+                        Phrase ph= new Phrase(ch);
+                        dato.setPhrase(ph);
+                    }
+                    else
+                    {
+                        dato.setPhrase(new Phrase(""+b.getSaldos().get(i)));
+                    }
+                }
+                if(i==15 || i==31 || i==43 || i==48 || i==54 || i==60)
+                {
+                    dato.setBorder(Rectangle.BOTTOM);
+
+                }
+                else
+                {
+                    dato.setBorder(Rectangle.NO_BORDER);
+                }
+                dato.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table.addCell(dato);
+                
+                
+                if(i==15 || i==31 || i==32 || i==43 || i==48 || i==54 || i==60 || i==61)
+                {
+                    dato.setPhrase(new Phrase(""+b.getSumas().get(i)));
+                    dato.setBorder(Rectangle.BOTTOM);
+                }
+                else
+                {
+                    Chunk ch=new Chunk();
+                    String valor="";
+                    ch.append(valor);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                }
+                dato.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                table.addCell(dato);
             }
+            document.add(table);
+            document.add(new Paragraph(""));
+            // step 5: we close the document
+            document.close();
+            // step 6: we output the writer as bytes to the response output
+            DataOutputStream output = new DataOutputStream(response.getOutputStream());
+            byte[] bytes = buffer.toByteArray();
+            response.setContentLength(bytes.length);
+            for (int i = 0; i < bytes.length; i++) {
+                output.writeByte(bytes[i]);
+            }
+            output.close();
+            response.getOutputStream();
             
         }catch (Exception ex) {
             ex.printStackTrace();
