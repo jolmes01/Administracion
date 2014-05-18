@@ -46,7 +46,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletBalance</servlet-name>
-        <url-pattern>/ServletBalance</url-pattern>
+        <url-pattern>/balanceGeneral</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
