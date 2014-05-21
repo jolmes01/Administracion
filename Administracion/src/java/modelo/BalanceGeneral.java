@@ -102,7 +102,7 @@ public class BalanceGeneral {
     
     public void calcula(int idEmpresa) throws SQLException{
         Connection con= new AccesBD().conexion();
-        PreparedStatement ps= con.prepareStatement("SELECT idCuentaC,descripcion,saldo FROM cuentas WHERE idEmpresaC LIKE ? AND idSubCuenta LIKE 0 ORDER BY idCuentaC");
+        PreparedStatement ps= con.prepareStatement("SELECT idCuentaC,descripcion,saldo FROM cuentas WHERE idEmpresaC LIKE ? ORDER BY idCuentaC");
         ps.setInt(1, idEmpresa);
         ResultSet rs= ps.executeQuery();
         while(rs.next())
@@ -112,10 +112,10 @@ public class BalanceGeneral {
             val.add(rs.getDouble("saldo"));
         }
         con.close();
-        if(!descripcion.isEmpty())
+        if((!descripcion.isEmpty())&&(!id.isEmpty()))
         {
             this.activo=0.0;
-            saldos.add(this.caja);
+            saldos.add(this.activo);
             this.circulante=0.0;
             saldos.add(this.circulante);
             this.caja = this.val.get(descripcion.indexOf("Caja"));
@@ -181,9 +181,9 @@ public class BalanceGeneral {
             saldos.add(this.gdeorg);
             this.gdeins = this.val.get(descripcion.indexOf("Gastos de instalación"));
             saldos.add(this.gdeins);
-            this.sumactivonc=this.terrenos+this.edificio+this.depedificio+this.mobyequipo+this.depequipo+this.edereparto+this.deptransporte+this.edecomputo+this.depcomputo
+            this.sumactivonc=this.terrenos+this.edificio-this.depedificio+this.mobyequipo-this.depequipo+this.edereparto-this.deptransporte+this.edecomputo-this.depcomputo
                     +this.creditom+this.patentes+this.marcas+this.depgarantia+this.gdeorg+this.gdeins;
-            sumas.add(this.sumactivoc);
+            sumas.add(this.sumactivonc);
             this.sumarac=0.0;
             saldos.add(this.sumarac);
             this.sumactivo=this.sumactivoc+this.sumactivonc;
@@ -210,7 +210,7 @@ public class BalanceGeneral {
             saldos.add(this.rentcpanticipado);
             this.ptu = this.val.get(descripcion.indexOf("PTU por pagar"));
             saldos.add(this.ptu);
-            this.sumapcp=this.proveedores+this.acreedores+this.dppagar+this.itrasladado+this.iptrasladar+this.impppagar+this.rentcpanticipado+this.ptu;
+            this.sumapcp=this.proveedores+this.acreedores+this.dppagar+this.itrasladado+this.iptrasladar+this.impppagar+this.rentcpanticipado+this.ptu+this.intcpanticipadocp;
             sumas.add(this.sumapcp);
             this.plargo=0.0;
             saldos.add(plargo);
@@ -218,16 +218,16 @@ public class BalanceGeneral {
             saldos.add(this.docpplargo);
             this.ahipotecarios = this.val.get(descripcion.indexOf("Acreedores hipotecarios"));
             saldos.add(this.ahipotecarios);
-            this.creditofrac = this.val.get(descripcion.indexOf("Crédito refraccionario"));
+            this.creditofrac = this.val.get(descripcion.indexOf("Crédito refaccionario"));
             saldos.add(this.creditofrac);
             this.intcpanticipadolp = this.val.get(id.indexOf(2204));
             saldos.add(this.intcpanticipadolp);
-            this.sumaplp=this.docpplargo+this.ahipotecarios+this.creditofrac;
+            this.sumaplp=this.docpplargo+this.ahipotecarios+this.creditofrac+this.intcpanticipadolp;
             sumas.add(this.sumaplp);
-            this.circulante=0.0;
-            saldos.add(this.circulante);
             this.contable=0.0;
             saldos.add(this.contable);
+            this.ganado=0.0;
+            saldos.add(this.ganado);
             this.capitalsocial = this.val.get(descripcion.indexOf("Capital Social"));
             saldos.add(this.capitalsocial);
             this.aportaciones = this.val.get(descripcion.indexOf("Aportaciones para futuros aumentos de capital"));

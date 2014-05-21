@@ -24,7 +24,7 @@ public class ServletBalance extends HttpServlet {
     private final String descripciones[]
             ={"Activo","Circulante","Caja","Bancos","Inversiones Temporales","Clientes","Deudores diversos",
               "Documentos por cobrar","Almacén","IVA acreditable","IVA por acreditar",
-              "Rentras pagadas por anticipado","Primas de seguro","Intereses pagados por anticipado",
+              "Rentas pagadas por anticipado","Primas de seguro","Intereses pagados por anticipado",
               "Papelería y útiles","Propaganda y publicidad","No circulante","Terrenos","Edificio",
               "Depreciación acumulada de edificio","Mobiliario y equipo de oficina",
               "Depreciación acumulada de mobiliario y equipo","Equipo de reparto",
@@ -38,7 +38,7 @@ public class ServletBalance extends HttpServlet {
               "Prima en venta de acciones","Capital ganado","Utilidades de ejercicios anteriores","Pérdida de ejercicios anteiores","Reserva legal",
               "Utilidad del ejercicio","Pérdida del ejercicio","SUMA PASIVO MÁS CAPITAL CONTABLE"};
     
-    @Override
+    
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -60,12 +60,13 @@ public class ServletBalance extends HttpServlet {
             //step 3: we open the document
             document.open();
             //step 4: we add content to the document
-            Paragraph title= new Paragraph((session.getAttribute("nEmpresa")!=null) ? session.getAttribute("nEmpresa").toString() : "Empresa");
-            title.setAlignment(Element.ALIGN_CENTER);
+            Paragraph title = new Paragraph((session.getAttribute("nEmpresa") != null) ? session.getAttribute("nEmpresa").toString() : "Empresa");
+                        title.setAlignment(Element.ALIGN_CENTER);
             title.setFont(NORMAL);
             document.add(title);
-            title = new Paragraph("Estado de situación financiera al 31 de Diciembre del " + (new Date().getYear() + 1900));           
+            title = new Paragraph("Estado de resultado integral del 01 de Enero al 31 de Diciembre del " + (new Date().getYear() + 1900));
             title.setAlignment(Element.ALIGN_CENTER);
+
             title.setFont(NORMAL);
             document.add(title);
             title = new Paragraph("Cifras en miles de pesos");           
@@ -75,11 +76,69 @@ public class ServletBalance extends HttpServlet {
             for (int i = 0; i < 2; i++) {
                 document.add(new Paragraph(" "));
             }
-            PdfPTable table=new PdfPTable(1);
+            PdfPTable table=new PdfPTable(2);
             //Obtenemos los datos de la clase BalanceGeneral
-            BalanceGeneral b=new BalanceGeneral();
-            b.calcula(Integer.parseInt(session.getAttribute("Empresa").toString()));
-            for(int i=0; i<b.getSaldos().size();i++)
+          // BalanceGeneral b=new BalanceGeneral();
+           //b.calcula(Integer.parseInt(session.getAttribute("Empresa").toString()));
+            
+            for(int i=0;i<descripciones.length;i++)
+            {
+                PdfPCell dato = new PdfPCell();
+                if(i==0 || i==32 || i==33 || i==49 || i==61)
+                {
+                    Chunk ch= new Chunk(descripciones[i]);
+                    ch.setFont(BOLD_Tot);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_LEFT);
+                }
+                else if(i==1 || i==16 || i==34 || i==44 || i==50 || i==55)
+                {
+                    Chunk ch= new Chunk(descripciones[i],new Font(FontFamily.TIMES_ROMAN,12,Font.UNDERLINE));
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_LEFT);
+                }
+                else
+                {
+                    Chunk ch=new Chunk(descripciones[i]);
+                    Phrase ph= new Phrase(ch);
+                    dato.setPhrase(ph);
+                    dato.setHorizontalAlignment(Element.ALIGN_LEFT);
+                }
+                dato.setBorder(Rectangle.NO_BORDER);
+                table.addCell(dato);
+                
+                if(i==0 || i==1 || i==16 || i ==32 || i==33 || i==34 || i==44 || i==49 || i==50 || i==55 || i==61)
+                {
+                    dato.setPhrase(new Phrase(" "));
+                }
+                /*else if (b.getVal().size() > 0) {
+                    Chunk ch = new Chunk();
+                    if(b.getSaldos().get(i) < 0){
+                        String valor = "("+(b.getSaldos().get(i)*(-1))+")";
+                        ch.append(valor);
+                        ch.setFont(NORMAL_Negative);
+                    }else{
+                        dato.setPhrase(new Phrase("" + b.getSaldos().get(i)));
+                    }
+                }*/ else {
+                    dato.setPhrase(new Phrase("0.0"));
+                }
+                if(i==15 || i==31 || i==43 || i==48 || i==54 || i==60)
+                {
+                    dato.setBorder(Rectangle.BOTTOM);
+                }
+                else
+                {
+                    dato.setBorder(Rectangle.NO_BORDER);
+                }
+                dato.setBorder(Rectangle.NO_BORDER);
+                table.addCell(dato);
+            }
+            
+            int x=0;
+           /* for(int i=0; i<b.getSaldos().size();i++)
             {
                 PdfPCell dato = new PdfPCell();
                 if(i==0 || i==32 || i==33 || i==49 || i==61)
@@ -146,8 +205,9 @@ public class ServletBalance extends HttpServlet {
                 
                 if(i==15 || i==31 || i==32 || i==43 || i==48 || i==54 || i==60 || i==61)
                 {
-                    dato.setPhrase(new Phrase(""+b.getSumas().get(i)));
+                    dato.setPhrase(new Phrase(""+b.getSumas().get(x)));
                     dato.setBorder(Rectangle.BOTTOM);
+                    x++;
                 }
                 else
                 {
@@ -159,7 +219,7 @@ public class ServletBalance extends HttpServlet {
                 }
                 dato.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table.addCell(dato);
-            }
+            }*/
             document.add(table);
             document.add(new Paragraph(""));
             // step 5: we close the document
