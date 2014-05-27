@@ -11,9 +11,9 @@
         <div id="polizaPanel" class="panel-collapse collapsing">
             <div class="panel-body">
                 <div class="form-group">
-                    <label for="poliza" class="col-md-2 control-label">No. de Poliza</label>
+                    <label for="poliza" class="col-md-2 control-label">No. de Poliza (El último No. de poliza es: <%= polizas %>)</label>
                     <div class="col-md-6">
-                        <input type="number" id="poliza" name="poliza" min="1" required/>
+                        <input type="number" id="poliza" name="poliza" min="<%= polizas+1 %>" required/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -26,7 +26,7 @@
                             %>
                             <option value="<%= c.getIdCuenta() %>"><%= c.getIdCuenta() + " - " + c.getDescripcionCuenta() %></option>
                             <% } else {
-                            for(int i = 0; i < c.getSubcuentas().size(); i++){
+                            for(int i = 0; i <= c.getSubcuentas().size(); i++){
                             if(c.getSubCuenta(i).getIdSubCuenta() != 0){
                             %>
                             <option value="<%= c.getIdCuenta() %>.<%= c.getSubCuenta(i).getIdSubCuenta() %>"><%= c.getIdCuenta() + "." + c.getSubCuenta(i).getIdSubCuenta() + " - " + c.getSubCuenta(i).getDescripcion() %></option>

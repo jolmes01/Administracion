@@ -52,7 +52,7 @@
                 <div class="row main-row">
                     <div class="12u">
                         <section>
-                            <h2>Reportes de Resultado Integral y Estado de Situación Financiera</h2>
+                            <p class="h2">Reportes de Resultado Integral y Estado de Situación Financiera</p>
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     Reportes
@@ -60,7 +60,7 @@
                                 <div id="polizaPanel" class="panel-collapse">
                                     <div id="contenidoImpreso" class="panel-body">
                                         <p class="lead"><strong>¿Necesitas el reporte de tu empresa?</strong> No te preocupes solo da click al botón
-                                            del reporte que quieres y se abrira una pestaña con tu reporte generado</p>
+                                            del reporte que quieres.</p>
                                         <button class="btn btn-primary" onclick="ResultadoIntegral('../resultadoIntegral')">Reporte de Resultado Integral</button>
                                         <button class="btn btn-info" onclick="BalanceGeneral('../balanceGeneral')">Estado de Situación Financiera</button>
                                     </div>

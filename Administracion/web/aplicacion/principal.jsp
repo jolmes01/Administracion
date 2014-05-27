@@ -44,11 +44,11 @@
                 <div class="row main-row">
                     <div class="7u">
                         <section>
-                            <h2>Sistema Contable - SisCon</h2>
+                            <p class="h2">Sistema Contable - SisCon</p>
                             <p>Te permite de manera más fácil organizar las cuentas de tu empresa
                                 de manera dinámica y evita que tengas que estar pensando en cuadrar tus datos,
                                 solo ingresa los cargos y los abonos en las cuentas de tus polizas y listo SisCon se encarga
-                                de lo demás, hasta de genrar tus estados (Integral y Financiero).</p>
+                                de lo demás, hasta de generar tus estados (Integral y Financiero).</p>
                         </section>
                     </div>
                 </div>

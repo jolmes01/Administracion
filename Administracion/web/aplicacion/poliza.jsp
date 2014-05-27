@@ -164,6 +164,7 @@
                 cuenta = new BeanCuentas();
                 session.setAttribute("cuentasE", cuenta);
             }
+            int polizas = cuenta.getTotPol();
             Map<Integer, Cuenta> map = cuenta.getCuentasSeparadas();
             Iterator<Map.Entry<Integer, Cuenta>> it = map.entrySet().iterator();
             ArrayList<Cuenta> cuentasList = new ArrayList<Cuenta>();
@@ -180,7 +181,7 @@
                 <div class="row main-row">
                     <div class="12u">
                         <section>
-                            <h2>Captura de poliza</h2>
+                            <p class="h2">Captura de poliza</p>
                             <%@include file="../forms/altapoliza.html" %>
                             <div id="tablaPolizas">
                             </div>

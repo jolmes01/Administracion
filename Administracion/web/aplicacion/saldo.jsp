@@ -8,7 +8,7 @@
 <!DOCTYPE HTML>
 <html lang="es">
     <head>
-        <title>SisCon - <%= session.getAttribute("Usuario") %></title>
+        <title>SisCon - <%= session.getAttribute("Usuario")%></title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
@@ -43,29 +43,32 @@
 
                 return xmlHttp;
             }
+            function ayuda() {
+                $('#cuenta').popover({placement: 'top', title: "Ejemplo, el formato de consulta es: Para cuentas 1101 y para subcuentas 1101.1"});
+                $('#cuenta').popover('show');
+            }
+            function ayudaOut(){
+                $('#cuenta').popover('hide');
+            }
             function consulta()
             {
+                $('#cuenta').popover('destroy');
                 $('#resultadoCuenta').hide();
                 var envio = true;
                 var request = get_XmlHttp();
                 var cuenta = document.getElementById("cuenta").value;
-                var cuentaE = document.getElementById("cuentaEspecifica").value;
                 $('#cuenta').tooltip('destroy');
-                $('#cuentaEspecifica').tooltip('destroy');
                 if (cuenta == "") {
                     $('#cuenta').tooltip({placement: 'right', title: "Debes ingresar el número de la cuenta"});
                     $('#cuenta').tooltip('show');
                     envio = false;
                 }
-                if ($('#activar').is(':checked') && (cuentaE == "" || isNaN(cuentaE))) {
-                    $('#cuentaEspecifica').tooltip({placement: 'right', title: "Debes ingresar el número de la cuenta"});
-                    $('#cuentaEspecifica').tooltip('show');
-                    envio = false;
-                }
                 if (envio) {
-                    var params = "cuenta=" + cuenta;
-                    if (cuentaE != "") {
-                        params += "&cuentaE=" + cuentaE;
+                    var params = "cuenta=";
+                    if (cuenta.length > 4) {
+                        params += cuenta.substring(0, 4) + "&cuentaE=" + cuenta.substring(5);
+                    } else {
+                        params += cuenta;
                     }
                     var parametros = "submit=consultaS" + "&" + params;
                     request.open("POST", "./cuentas", true);
@@ -100,21 +103,12 @@
                 <div class="row main-row">
                     <div class="12u">
                         <section>
-                            <h2>Saldos</h2>
+                            <p class="h2">Saldos</p>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="cuenta">Ingrese número de la cuenta general:</label>
-                                        <input class="form-control" id="cuenta" placeholder="Cuenta">
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" id="activar"> Búsqueda por cuenta específica
-                                        </label>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cuentaEspecifica">Ingrese número de la cuenta Específica:</label>
-                                        <input  class="form-control" id="cuentaEspecifica" placeholder="Cuenta específica" disabled="true">
+                                        <label for="cuenta">Ingrese número de la cuenta:</label>
+                                        <input class="form-control" id="cuenta" placeholder="Cuenta" onmouseover="ayuda()" onmouseout="ayudaOut()">
                                     </div>
                                     <button type="button" id="btnBuscar" onclick="consulta()" class="btn btn-primary">Buscar</button>
                                 </div>

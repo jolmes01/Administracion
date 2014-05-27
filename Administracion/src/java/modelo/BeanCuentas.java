@@ -51,12 +51,29 @@ public class BeanCuentas {
         this.cuenta = cuenta;
     }
 
+    public int getTotPol() {
+        int valor = 0;
+        try {
+            Connection con = new AccesBD().conexion();
+            PreparedStatement ps = con.prepareStatement("SELECT COUNT(DISTINCT NoPoliza) FROM poliza WHERE idEmpresaP LIKE "+this.idEmpresa);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                valor = rs.getInt(1);
+            }
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return valor;
+    }
+
     public void getCuentas() {
         try {
             cuenta.clear();
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM cuentas WHERE idEmpresaC LIKE "+getIdEmpresa());
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM cuentas WHERE idEmpresaC LIKE " + getIdEmpresa());
             ps.execute();
+            System.out.println(ps.toString());
             ResultSet rs = ps.getResultSet();
             while (rs.next()) {
                 //Obtiene los parametros resultantes de la consulta de la vista
@@ -65,6 +82,7 @@ public class BeanCuentas {
                 String idSub = rs.getString("idSubCuenta");
                 String descripcionSub = rs.getString("descripcionSub");
                 String saldo = rs.getString("saldo");
+                System.out.println(id + "-" + descripcion + " idSub " + idSub + " Desc " + descripcionSub);
                 //Verifica que el id de la cuenta no exista ya en la lista
                 if (!cuenta.containsKey(id)) {
                     Cuenta c = new Cuenta();
@@ -105,17 +123,19 @@ public class BeanCuentas {
             PreparedStatement ps = con.prepareStatement("SELECT "
                     + "idCuentaC,idSubCuenta, descripcion, descripcionSub, saldo "
                     + "FROM cuentas "
-                    + "WHERE idEmpresaC LIKE "+getIdEmpresa()+" "
+                    + "WHERE idEmpresaC LIKE " + getIdEmpresa() + " "
                     + "ORDER BY idCuentaC,idSubCuenta");
             ps.execute();
             ResultSet rs = ps.getResultSet();
             while (rs.next()) {
                 //Obtiene los parametros resultantes de la consulta de la vista
                 int id = Integer.parseInt(rs.getString("idCuentaC"));
+                System.out.println(id);
                 String descripcion = rs.getString("descripcion");
                 String idSub = rs.getString("idSubCuenta");
                 String descripcionSub = rs.getString("descripcionSub");
                 String saldo = rs.getString("saldo");
+                //System.out.println(id+"-"+descripcion+" idSub "+idSub+" Desc "+descripcionSub);
                 //Verifica que el id de la cuenta no exista ya en la lista
                 if (!cuentasSeparadas.containsKey(id)) {
                     Cuenta c = new Cuenta();
@@ -124,6 +144,7 @@ public class BeanCuentas {
                     //Si el dato obtenido tiene subcuenta lo agrega a la cuenta como una subdivisión de la misma
                     if (idSub != null && descripcionSub != null) {
                         SubCuenta sub = new SubCuenta(Integer.parseInt(idSub), descripcionSub, Double.parseDouble(saldo));
+                        //System.out.println(idSub+"-"+descripcionSub+"-"+saldo);
                         c.setSubCuenta(sub);
                     } else { //Si no la presenta guarda el valor total del saldo en saldo total
                         c.setSaldoTotal(Double.valueOf(saldo));
@@ -156,7 +177,7 @@ public class BeanCuentas {
         DecimalFormat df = new DecimalFormat("###,###,###,###.00");
         try {
             Connection con = new AccesBD().conexion();
-            PreparedStatement ps = con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idCuentaC LIKE " + idCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
+            PreparedStatement ps = con.prepareStatement("SELECT descripcion,saldo FROM cuentas WHERE idCuentaC LIKE " + idCuenta + " AND idEmpresaC LIKE " + getIdEmpresa());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
@@ -168,6 +189,7 @@ public class BeanCuentas {
                 mensaje = "<div class=\"alert alert-warning\">"
                         + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
             }
+            con.close();
         } catch (SQLException ex) {
             mensaje = "<div class=\"alert alert-danger\">No se pudo consultar tu saldo en estos momentos</div>";
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,19 +206,20 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("SELECT descripcion,descripcionSub,saldo FROM cuentas "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE " + getIdEmpresa());
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
                 descripSub = rs.getString("descripcionSub");
                 saldo = rs.getString("saldo");
                 mensaje = "<div class=\"alert alert-success\">"
-                        + "<p class=\"lead\">El saldo de la cuenta <strong>" + descripcion + "</strong> con subcuenta <strong>" + descripSub + "</strong> "
+                        + "<p class=\"lead\">El saldo de la subcuenta <strong>" + descripSub + "</strong> "
                         + "es <strong>$" + df.format(Double.valueOf(saldo)) + "</strong></p></div>";
             } else {
                 mensaje = "<div class=\"alert alert-warning\">"
                         + "<p class=\"lead\">La cuenta no existe en tu catalogo</p></div>";
             }
+            con.close();
         } catch (SQLException ex) {
             mensaje = "<div class=\"alert alert-danger\">No se pudo consultar tu saldo en estos momentos</div>";
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,7 +232,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
-                    + "VALUES("+getIdEmpresa()+"," + idCuenta + ",0,null," + saldo + ")");
+                    + "VALUES(" + getIdEmpresa() + "," + idCuenta + ",0,null," + saldo + ")");
             boolean result = ps.execute();
             if (!result) {
                 ps.execute("SELECT descripcion FROM cuenta WHERE idcuenta = " + idCuenta);
@@ -222,8 +245,8 @@ public class BeanCuentas {
                     cuenta.put(idCuenta, c);
                     resultado = true;
                 }
-                con.close();
             }
+            con.close();
         } catch (SQLException ex) {
             resultado = false;
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
@@ -236,7 +259,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("INSERT INTO cuenta_empresa "
-                    + "VALUES("+getIdEmpresa()+"," + idCuenta + "," + idSubD + ",'" + descripcion + "'," + saldo + ")");
+                    + "VALUES(" + getIdEmpresa() + "," + idCuenta + "," + idSubD + ",'" + descripcion + "'," + saldo + ")");
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -260,7 +283,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE "+getIdEmpresa());
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE " + idSubCuenta + " AND idEmpresaC LIKE " + getIdEmpresa());
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -282,7 +305,7 @@ public class BeanCuentas {
         try {
             Connection con = new AccesBD().conexion();
             PreparedStatement ps = con.prepareStatement("DELETE FROM cuenta_empresa "
-                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE 0 AND idEmpresaC LIKE "+getIdEmpresa()+" AND saldo LIKE 0");
+                    + "WHERE idCuentaC LIKE " + idCuenta + " AND idSubCuenta LIKE 0 AND idEmpresaC LIKE " + getIdEmpresa() + " AND saldo LIKE 0");
             boolean result = ps.execute();
             con.close();
             if (!result) {
@@ -302,6 +325,7 @@ public class BeanCuentas {
             PreparedStatement ps = con.prepareStatement("UPDATE cuenta_empresa "
                     + "SET saldo = (saldo+" + saldo + ") WHERE idCuentaC = " + idCuenta + " AND idSubCuenta LIKE 0;");
             ps.execute();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(BeanCuentas.class.getName()).log(Level.SEVERE, null, ex);
         }

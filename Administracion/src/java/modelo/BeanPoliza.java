@@ -106,7 +106,8 @@ public class BeanPoliza {
                 + "</tr>";
         String retorno = "<table class=\"table table-responsive\">\n"
                 + "                                    <thead>\n";
-        retorno += (((cargos - abonos == 0) && polizas.size() > 0) && (partida == 0 && datosNull == 1)) ? botonSend : "";
+        String msg = (polizas.size() > 0) ? "<p class=\"h2\">Aún no cuadran los cargos y abonos, por tal motivo estan en rojo y por eso no puedes registrar la poliza</p>" : "";
+        retorno += (((cargos - abonos == 0) && polizas.size() > 0) && (partida == 0 && datosNull == 1)) ? botonSend : msg;
         retorno += "                                        <tr>\n"
                 + "                                            <th><p>No. de Poliza</p></th>\n"
                 + "                                    <th><p>Cuenta</p></th>\n"
@@ -195,6 +196,7 @@ public class BeanPoliza {
             if (rs.next()) {
                 descripcion = rs.getString("descripcion");
             }
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -212,6 +214,7 @@ public class BeanPoliza {
             if (rs.next()) {
                 descripcion = rs.getString("descripcionSub");
             }
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -229,6 +232,7 @@ public class BeanPoliza {
             if (rs.next()) {
                 valorDeSobrePaso = rs.getInt(1);
             }
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(BeanPoliza.class.getName()).log(Level.SEVERE, null, ex);
         }

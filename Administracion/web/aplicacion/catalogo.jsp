@@ -59,10 +59,11 @@
                 <div class="row main-row">
                     <div class="12u">
                         <section>
-                            <h2>Cátalogo de cuentas de <small><%= session.getAttribute("nEmpresa") %></small></h2>
                             <% if(Integer.parseInt(session.getAttribute("Tipo").toString()) == 1){ %>
+                            <p class="h2">Aquí puedes dar de alta y baja tus cuentas <small>(Solo da click al recuadro para dar de alta o baja)</small></p>
                             <%@include file="../forms/cuentasControl.html" %>
                             <% } %>
+                            <p class="h2">Este es tu catálogo de cuentas <small><%= session.getAttribute("nEmpresa") %></small></p>
                             <ul class="nav nav-pills">
                                 <li class="active"><a href="#Activos" data-toggle="tab">Activos</a></li>
                                 <li><a href="#Pasivos" data-toggle="tab">Pasivos</a></li>
@@ -105,13 +106,13 @@
                 boolean respuesta = Boolean.parseBoolean(session.getAttribute("Respuesta").toString());
                 session.removeAttribute("Respuesta");
                 mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
-                detalles = respuesta ? "Se acaba de agregar la cuenta a tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+                detalles = respuesta ? "Se acaba de agregar la cuenta a tu catálogo" : "Se presento un falló en tu conexión a internet. Intenta más tarde :'(";
             } else if (session.getAttribute("RespuestaE") != null) {
                 mostrar = true;
                 boolean respuesta = Boolean.parseBoolean(session.getAttribute("RespuestaE").toString());
                 session.removeAttribute("RespuestaE");
                 mensajeR = respuesta ? "Acción Correcta :¬D" : "Hubo un problema D:";
-                detalles = respuesta ? "Se acaba de borrar la cuenta de tu catalogo" : "Se presento un fallo en tu conección a internet. Intenta más tarde :'(";
+                detalles = respuesta ? "Se acaba de borrar la cuenta de tu catalogo" : "Se presento un falló en tu conexión a internet. Intenta más tarde :'(";
             }
             if (mostrar) {
         %>
